@@ -1,0 +1,977 @@
+[
+  {
+    "id": "urn:ngsi-ld:Hotel:hotel-modelo-farol",
+    "type": "Hotel",
+    "name": {
+      "type": "Property",
+      "value": "Hotel Modelo Farol"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.205,
+          -5.87
+        ]
+      }
+    },
+    "address": {
+      "type": "Property",
+      "value": {
+        "streetAddress": "Rua Exemplo, 100",
+        "addressLocality": "Natal",
+        "addressCountry": "BR",
+        "postalCode": "59000-000"
+      }
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-001"
+    },
+    "category": {
+      "type": "Property",
+      "value": "hotel"
+    },
+    "starRating": {
+      "type": "Property",
+      "value": 4
+    },
+    "checkInTime": {
+      "type": "Property",
+      "value": "14:00"
+    },
+    "checkOutTime": {
+      "type": "Property",
+      "value": "12:00"
+    },
+    "amenities": {
+      "type": "Property",
+      "value": [
+        "wifi",
+        "pool",
+        "breakfast",
+        "beachfront"
+      ]
+    },
+    "contactPoint": {
+      "type": "Property",
+      "value": {
+        "telephone": "+55 84 0000-0000",
+        "url": "https://hotel-modelo.example"
+      }
+    },
+    "description": {
+      "type": "Property",
+      "value": "Hotel fictício usado apenas para testes."
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:RoomType:hotel-modelo-farol:standard",
+    "type": "RoomType",
+    "name": {
+      "type": "Property",
+      "value": "Standard casal"
+    },
+    "refHotel": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Hotel:hotel-modelo-farol"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-001"
+    },
+    "maxAdults": {
+      "type": "Property",
+      "value": 2
+    },
+    "maxChildren": {
+      "type": "Property",
+      "value": 1
+    },
+    "totalUnits": {
+      "type": "Property",
+      "value": 20
+    },
+    "bedConfiguration": {
+      "type": "Property",
+      "value": "1 cama de casal"
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:RoomType:hotel-modelo-farol:familia",
+    "type": "RoomType",
+    "name": {
+      "type": "Property",
+      "value": "Família"
+    },
+    "refHotel": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Hotel:hotel-modelo-farol"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-001"
+    },
+    "maxAdults": {
+      "type": "Property",
+      "value": 3
+    },
+    "maxChildren": {
+      "type": "Property",
+      "value": 2
+    },
+    "totalUnits": {
+      "type": "Property",
+      "value": 8
+    },
+    "bedConfiguration": {
+      "type": "Property",
+      "value": "1 cama de casal e 2 de solteiro"
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220",
+    "type": "RoomAvailability",
+    "refHotel": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Hotel:hotel-modelo-farol"
+    },
+    "refRoomType": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:RoomType:hotel-modelo-farol:standard"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-001"
+    },
+    "stayDate": {
+      "type": "Property",
+      "value": {
+        "@type": "Date",
+        "@value": "2026-12-20"
+      }
+    },
+    "availableUnits": {
+      "type": "Property",
+      "value": 6
+    },
+    "pricePerNight": {
+      "type": "Property",
+      "value": 420.0,
+      "currency": {
+        "type": "Property",
+        "value": "BRL"
+      }
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261221",
+    "type": "RoomAvailability",
+    "refHotel": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Hotel:hotel-modelo-farol"
+    },
+    "refRoomType": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:RoomType:hotel-modelo-farol:standard"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-001"
+    },
+    "stayDate": {
+      "type": "Property",
+      "value": {
+        "@type": "Date",
+        "@value": "2026-12-21"
+      }
+    },
+    "availableUnits": {
+      "type": "Property",
+      "value": 0
+    },
+    "pricePerNight": {
+      "type": "Property",
+      "value": 420.0,
+      "currency": {
+        "type": "Property",
+        "value": "BRL"
+      }
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:familia:20261220",
+    "type": "RoomAvailability",
+    "refHotel": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Hotel:hotel-modelo-farol"
+    },
+    "refRoomType": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:RoomType:hotel-modelo-farol:familia"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-001"
+    },
+    "stayDate": {
+      "type": "Property",
+      "value": {
+        "@type": "Date",
+        "@value": "2026-12-20"
+      }
+    },
+    "availableUnits": {
+      "type": "Property",
+      "value": 3
+    },
+    "pricePerNight": {
+      "type": "Property",
+      "value": 690.0,
+      "currency": {
+        "type": "Property",
+        "value": "BRL"
+      }
+    },
+    "minimumStay": {
+      "type": "Property",
+      "value": 2
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:Restaurant:restaurante-modelo-mare",
+    "type": "Restaurant",
+    "name": {
+      "type": "Property",
+      "value": "Restaurante Modelo Maré"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.2062,
+          -5.8688
+        ]
+      }
+    },
+    "address": {
+      "type": "Property",
+      "value": {
+        "streetAddress": "Avenida Exemplo, 250",
+        "addressLocality": "Natal",
+        "addressCountry": "BR"
+      }
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-002"
+    },
+    "capacity": {
+      "type": "Property",
+      "value": 80
+    },
+    "occupancy": {
+      "type": "Property",
+      "value": 52,
+      "observedAt": "2026-12-20T19:30:00Z"
+    },
+    "availabilityLevel": {
+      "type": "Property",
+      "value": "limited"
+    },
+    "cuisine": {
+      "type": "Property",
+      "value": [
+        "regional",
+        "frutos do mar"
+      ]
+    },
+    "priceRange": {
+      "type": "Property",
+      "value": "$$"
+    },
+    "openingHoursSpecification": {
+      "type": "Property",
+      "value": [
+        {
+          "dayOfWeek": [
+            "Friday",
+            "Saturday"
+          ],
+          "opens": "11:00",
+          "closes": "23:30"
+        }
+      ]
+    },
+    "contactPoint": {
+      "type": "Property",
+      "value": {
+        "telephone": "+55 84 0000-0001"
+      }
+    },
+    "description": {
+      "type": "Property",
+      "value": "Restaurante fictício para testes."
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:Event:show-bar-modelo-20261220",
+    "type": "Event",
+    "name": {
+      "type": "Property",
+      "value": "Show acústico no Bar Modelo"
+    },
+    "startDate": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-20T22:00:00Z"
+      }
+    },
+    "endDate": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-21T00:30:00Z"
+      }
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.2071,
+          -5.8695
+        ]
+      }
+    },
+    "address": {
+      "type": "Property",
+      "value": {
+        "streetAddress": "Rua Exemplo, 15",
+        "addressLocality": "Natal",
+        "addressCountry": "BR"
+      }
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-003"
+    },
+    "category": {
+      "type": "Property",
+      "value": [
+        "spectacle"
+      ]
+    },
+    "eventScale": {
+      "type": "Property",
+      "value": "small"
+    },
+    "eventStatus": {
+      "type": "Property",
+      "value": [
+        "scheduled"
+      ]
+    },
+    "venueName": {
+      "type": "Property",
+      "value": "Bar Modelo"
+    },
+    "maximumAttendeeCapacity": {
+      "type": "Property",
+      "value": 60
+    },
+    "isAccessibleForFree": {
+      "type": "Property",
+      "value": false
+    },
+    "eventPriceFrom": {
+      "type": "Property",
+      "value": 30.0,
+      "currency": {
+        "type": "Property",
+        "value": "BRL"
+      }
+    },
+    "eventPriceTo": {
+      "type": "Property",
+      "value": 30.0,
+      "currency": {
+        "type": "Property",
+        "value": "BRL"
+      }
+    },
+    "audience": {
+      "type": "Property",
+      "value": [
+        "adult"
+      ]
+    },
+    "description": {
+      "type": "Property",
+      "value": "Apresentação fictícia em bar."
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:Event:festival-modelo-2027",
+    "type": "Event",
+    "name": {
+      "type": "Property",
+      "value": "Festival Modelo de Verão"
+    },
+    "startDate": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2027-01-15T18:00:00Z"
+      }
+    },
+    "endDate": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2027-01-17T04:00:00Z"
+      }
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.2301,
+          -5.8402
+        ]
+      }
+    },
+    "address": {
+      "type": "Property",
+      "value": {
+        "streetAddress": "Parque de Exposições Exemplo",
+        "addressLocality": "Natal",
+        "addressCountry": "BR"
+      }
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-exemplo-004"
+    },
+    "category": {
+      "type": "Property",
+      "value": [
+        "spectacle",
+        "gastronomy"
+      ]
+    },
+    "eventScale": {
+      "type": "Property",
+      "value": "large"
+    },
+    "eventStatus": {
+      "type": "Property",
+      "value": [
+        "scheduled"
+      ]
+    },
+    "venueName": {
+      "type": "Property",
+      "value": "Parque de Exposições Exemplo"
+    },
+    "maximumAttendeeCapacity": {
+      "type": "Property",
+      "value": 20000
+    },
+    "isAccessibleForFree": {
+      "type": "Property",
+      "value": false
+    },
+    "eventPriceFrom": {
+      "type": "Property",
+      "value": 120.0,
+      "currency": {
+        "type": "Property",
+        "value": "BRL"
+      }
+    },
+    "eventPriceTo": {
+      "type": "Property",
+      "value": 480.0,
+      "currency": {
+        "type": "Property",
+        "value": "BRL"
+      }
+    },
+    "audience": {
+      "type": "Property",
+      "value": [
+        "allPublic"
+      ]
+    },
+    "wheelChairAccessible": {
+      "type": "Property",
+      "value": true
+    },
+    "webSite": {
+      "type": "Property",
+      "value": "https://festival-modelo.example"
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:Beach:praia-modelo-do-farol",
+    "type": "Beach",
+    "name": {
+      "type": "Property",
+      "value": "Praia Modelo do Farol"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.199,
+          -5.779
+        ]
+      }
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-governo-001"
+    },
+    "beachType": {
+      "type": "Property",
+      "value": [
+        "urban",
+        "calmWaters"
+      ]
+    },
+    "facilities": {
+      "type": "Property",
+      "value": [
+        "promenade",
+        "showers",
+        "lifeGuard"
+      ]
+    },
+    "accessType": {
+      "type": "Property",
+      "value": [
+        "privateVehicle",
+        "onFoot",
+        "publicTransport"
+      ]
+    },
+    "length": {
+      "type": "Property",
+      "value": 1800
+    },
+    "width": {
+      "type": "Property",
+      "value": 60
+    },
+    "occupationRate": {
+      "type": "Property",
+      "value": "medium"
+    },
+    "refWeatherStation": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:PointOfInterest:estacao-modelo-01"
+    },
+    "address": {
+      "type": "Property",
+      "value": {
+        "streetAddress": "Orla Modelo",
+        "addressLocality": "Natal",
+        "addressCountry": "BR"
+      }
+    },
+    "description": {
+      "type": "Property",
+      "value": "Praia fictícia; coordenadas ilustrativas, não representam local real."
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:PointOfInterest:coleta-modelo-farol-01",
+    "type": "PointOfInterest",
+    "name": {
+      "type": "Property",
+      "value": "Ponto de coleta Farol 01"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.1992,
+          -5.7793
+        ]
+      }
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-governo-001"
+    },
+    "category": {
+      "type": "Property",
+      "value": [
+        "bathingSamplingPoint"
+      ]
+    },
+    "refBeach": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Beach:praia-modelo-do-farol"
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:PointOfInterest:estacao-modelo-01",
+    "type": "PointOfInterest",
+    "name": {
+      "type": "Property",
+      "value": "Estação meteorológica modelo 01"
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.2,
+          -5.78
+        ]
+      }
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-governo-001"
+    },
+    "category": {
+      "type": "Property",
+      "value": [
+        "weatherStation"
+      ]
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:WaterQualityObserved:coleta-modelo-farol-01:20261220T120000Z",
+    "type": "WaterQualityObserved",
+    "dateObserved": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-20T12:00:00Z"
+      }
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.1992,
+          -5.7793
+        ]
+      }
+    },
+    "refPointOfInterest": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:PointOfInterest:coleta-modelo-farol-01"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "fonte-sonda-001"
+    },
+    "turbidity": {
+      "type": "Property",
+      "value": 8.4
+    },
+    "salinity": {
+      "type": "Property",
+      "value": 34.1
+    },
+    "temperature": {
+      "type": "Property",
+      "value": 28.6
+    },
+    "pH": {
+      "type": "Property",
+      "value": 8.1
+    },
+    "O2": {
+      "type": "Property",
+      "value": 6.3
+    },
+    "source": {
+      "type": "Property",
+      "value": "simulador-sondas"
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:WeatherObserved:estacao-modelo-01:20261220T120000Z",
+    "type": "WeatherObserved",
+    "dateObserved": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-20T12:00:00Z"
+      }
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.2,
+          -5.78
+        ]
+      }
+    },
+    "refPointOfInterest": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:PointOfInterest:estacao-modelo-01"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "fonte-estacao-001"
+    },
+    "precipitation": {
+      "type": "Property",
+      "value": 2.4
+    },
+    "precipitationIntervalMinutes": {
+      "type": "Property",
+      "value": 10
+    },
+    "temperature": {
+      "type": "Property",
+      "value": 29.2
+    },
+    "relativeHumidity": {
+      "type": "Property",
+      "value": 0.78
+    },
+    "source": {
+      "type": "Property",
+      "value": "simulador-estacao"
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:BathingReport:praia-modelo-do-farol:laudo-2026-0451",
+    "type": "BathingReport",
+    "refBeach": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Beach:praia-modelo-do-farol"
+    },
+    "refPointOfInterest": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:PointOfInterest:coleta-modelo-farol-01"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-governo-001"
+    },
+    "result": {
+      "type": "Property",
+      "value": "proper"
+    },
+    "collectionDate": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-15T09:00:00Z"
+      }
+    },
+    "validFrom": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-16T00:00:00Z"
+      }
+    },
+    "validUntil": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-23T00:00:00Z"
+      }
+    },
+    "issuingAuthority": {
+      "type": "Property",
+      "value": "Órgão Ambiental Modelo"
+    },
+    "reportNumber": {
+      "type": "Property",
+      "value": "2026/0451"
+    },
+    "escherichiaColi": {
+      "type": "Property",
+      "value": 120
+    },
+    "enterococci": {
+      "type": "Property",
+      "value": 18
+    },
+    "documentURL": {
+      "type": "Property",
+      "value": "https://laudos.example/2026-0451.pdf"
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:BathingStatus:praia-modelo-do-farol",
+    "type": "BathingStatus",
+    "refBeach": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Beach:praia-modelo-do-farol"
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-governo-001"
+    },
+    "status": {
+      "type": "Property",
+      "value": "proper"
+    },
+    "basis": {
+      "type": "Property",
+      "value": "report"
+    },
+    "computedAt": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-20T12:05:00Z"
+      }
+    },
+    "validUntil": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-23T00:00:00Z"
+      }
+    },
+    "refBathingReport": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:BathingReport:praia-modelo-do-farol:laudo-2026-0451"
+    },
+    "rainfall24h": {
+      "type": "Property",
+      "value": 2.4
+    },
+    "rainfall72h": {
+      "type": "Property",
+      "value": 5.0
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  },
+  {
+    "id": "urn:ngsi-ld:Event:restricao-banho-praia-modelo-20261224",
+    "type": "Event",
+    "name": {
+      "type": "Property",
+      "value": "Restrição de banho: Praia Modelo do Farol"
+    },
+    "startDate": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-24T00:00:00Z"
+      }
+    },
+    "endDate": {
+      "type": "Property",
+      "value": {
+        "@type": "DateTime",
+        "@value": "2026-12-26T00:00:00Z"
+      }
+    },
+    "location": {
+      "type": "GeoProperty",
+      "value": {
+        "type": "Point",
+        "coordinates": [
+          -35.199,
+          -5.779
+        ]
+      }
+    },
+    "address": {
+      "type": "Property",
+      "value": {
+        "streetAddress": "Orla Modelo",
+        "addressLocality": "Natal",
+        "addressCountry": "BR"
+      }
+    },
+    "dataOwner": {
+      "type": "Property",
+      "value": "org-governo-001"
+    },
+    "category": {
+      "type": "Property",
+      "value": [
+        "bathingRestriction"
+      ]
+    },
+    "eventStatus": {
+      "type": "Property",
+      "value": [
+        "scheduled"
+      ]
+    },
+    "refPointOfInterest": {
+      "type": "Relationship",
+      "object": "urn:ngsi-ld:Beach:praia-modelo-do-farol"
+    },
+    "description": {
+      "type": "Property",
+      "value": "Restrição fictícia de banho para teste de calendário."
+    },
+    "@context": [
+      "https://example.org/natal/natal-context.jsonld"
+    ]
+  }
+]

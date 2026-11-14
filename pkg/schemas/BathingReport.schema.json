@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/natal/schemas/BathingReport.schema.json",
+  "title": "BathingReport",
+  "description": "Laudo oficial de balneabilidade de uma praia ou ponto, com validade.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "refBeach",
+    "dataOwner",
+    "result",
+    "collectionDate",
+    "validFrom",
+    "validUntil",
+    "issuingAuthority",
+    "reportNumber"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^urn:ngsi-ld:BathingReport:[A-Za-z0-9._:-]+$"
+    },
+    "type": {
+      "const": "BathingReport"
+    },
+    "@context": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          }
+        }
+      ]
+    },
+    "refBeach": {
+      "type": "object",
+      "required": [
+        "type",
+        "object"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Relationship"
+        },
+        "object": {
+          "type": "string",
+          "pattern": "^urn:ngsi-ld:(Beach):[A-Za-z0-9._:-]+$"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "refPointOfInterest": {
+      "type": "object",
+      "required": [
+        "type",
+        "object"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Relationship"
+        },
+        "object": {
+          "type": "string",
+          "pattern": "^urn:ngsi-ld:(PointOfInterest):[A-Za-z0-9._:-]+$"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "dataOwner": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{3,64}$"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "enum": [
+            "proper",
+            "improper"
+          ]
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "collectionDate": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "object",
+          "required": [
+            "@type",
+            "@value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "@type": {
+              "const": "DateTime"
+            },
+            "@value": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+            }
+          }
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "validFrom": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "object",
+          "required": [
+            "@type",
+            "@value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "@type": {
+              "const": "DateTime"
+            },
+            "@value": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+            }
+          }
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "validUntil": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "object",
+          "required": [
+            "@type",
+            "@value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "@type": {
+              "const": "DateTime"
+            },
+            "@value": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+            }
+          }
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "issuingAuthority": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "string"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "reportNumber": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "string"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "escherichiaColi": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "enterococci": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "documentURL": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "string"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

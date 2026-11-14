@@ -1,0 +1,106 @@
+{
+  "id": "urn:ngsi-ld:Event:festival-modelo-2027",
+  "type": "Event",
+  "name": {
+    "type": "Property",
+    "value": "Festival Modelo de Verão"
+  },
+  "startDate": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2027-01-15T18:00:00Z"
+    }
+  },
+  "endDate": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2027-01-17T04:00:00Z"
+    }
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.2301,
+        -5.8402
+      ]
+    }
+  },
+  "address": {
+    "type": "Property",
+    "value": {
+      "streetAddress": "Parque de Exposições Exemplo",
+      "addressLocality": "Natal",
+      "addressCountry": "BR"
+    }
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-exemplo-004"
+  },
+  "category": {
+    "type": "Property",
+    "value": [
+      "spectacle",
+      "gastronomy"
+    ]
+  },
+  "eventScale": {
+    "type": "Property",
+    "value": "large"
+  },
+  "eventStatus": {
+    "type": "Property",
+    "value": [
+      "scheduled"
+    ]
+  },
+  "venueName": {
+    "type": "Property",
+    "value": "Parque de Exposições Exemplo"
+  },
+  "maximumAttendeeCapacity": {
+    "type": "Property",
+    "value": 20000
+  },
+  "isAccessibleForFree": {
+    "type": "Property",
+    "value": false
+  },
+  "eventPriceFrom": {
+    "type": "Property",
+    "value": 120.0,
+    "currency": {
+      "type": "Property",
+      "value": "BRL"
+    }
+  },
+  "eventPriceTo": {
+    "type": "Property",
+    "value": 480.0,
+    "currency": {
+      "type": "Property",
+      "value": "BRL"
+    }
+  },
+  "audience": {
+    "type": "Property",
+    "value": [
+      "allPublic"
+    ]
+  },
+  "wheelChairAccessible": {
+    "type": "Property",
+    "value": true
+  },
+  "webSite": {
+    "type": "Property",
+    "value": "https://festival-modelo.example"
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

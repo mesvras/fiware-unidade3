@@ -1,0 +1,170 @@
+{
+  "sem-dataOwner": {
+    "deve_falhar_com": "dataOwner",
+    "erros_obtidos": [
+      "schema: (raiz): 'dataOwner' is a required property"
+    ]
+  },
+  "enum-invalido": {
+    "deve_falhar_com": "schema",
+    "erros_obtidos": [
+      "schema: category/value: 'castelo' is not one of ['hotel', 'inn', 'resort', 'hostel', 'apartHotel']"
+    ]
+  },
+  "estrelas-fora-da-faixa": {
+    "deve_falhar_com": "starRating",
+    "erros_obtidos": [
+      "schema: starRating/value: 7 is greater than the maximum of 5"
+    ]
+  },
+  "atributo-com-erro-de-digitacao": {
+    "deve_falhar_com": "starRatin",
+    "erros_obtidos": [
+      "schema: (raiz): Additional properties are not allowed ('starRatin' was unexpected)",
+      "atributos perdidos na expansão: 11 entrada, 10 saída",
+      "termo sem definição no contexto: /starRatin"
+    ]
+  },
+  "preco-sem-currency": {
+    "deve_falhar_com": "currency",
+    "erros_obtidos": [
+      "schema: pricePerNight: 'currency' is a required property"
+    ]
+  },
+  "disponibilidade-maior-que-total": {
+    "deve_falhar_com": "totalUnits",
+    "erros_obtidos": [
+      "regra: availableUnits maior que totalUnits do RoomType"
+    ]
+  },
+  "data-do-id-diferente": {
+    "deve_falhar_com": "stayDate",
+    "erros_obtidos": [
+      "regra: data do id difere de stayDate"
+    ]
+  },
+  "data-sem-tipo": {
+    "deve_falhar_com": "schema",
+    "erros_obtidos": [
+      "schema: stayDate/value: '2026-12-20' is not of type 'object'"
+    ]
+  },
+  "ocupacao-sem-observedAt": {
+    "deve_falhar_com": "observedAt",
+    "erros_obtidos": [
+      "schema: occupancy: 'observedAt' is a required property"
+    ]
+  },
+  "ocupacao-maior-que-capacidade": {
+    "deve_falhar_com": "occupancy",
+    "erros_obtidos": [
+      "regra: occupancy maior que capacity"
+    ]
+  },
+  "evento-termina-antes-de-comecar": {
+    "deve_falhar_com": "endDate",
+    "erros_obtidos": [
+      "regra: endDate deve ser posterior a startDate"
+    ]
+  },
+  "evento-sem-porte": {
+    "deve_falhar_com": "eventScale",
+    "erros_obtidos": [
+      "regra: eventScale obrigatório fora de restrição de banho"
+    ]
+  },
+  "restricao-sem-praia": {
+    "deve_falhar_com": "refPointOfInterest",
+    "erros_obtidos": [
+      "regra: restrição de banho exige refPointOfInterest"
+    ]
+  },
+  "restricao-aponta-hotel": {
+    "deve_falhar_com": "refPointOfInterest",
+    "erros_obtidos": [
+      "schema: refPointOfInterest/object: 'urn:ngsi-ld:Hotel:hotel-modelo-farol' does not match '^urn:ngsi-ld:(Beach|PointOfInterest):[A-Za-z0-9._:-]+$'",
+      "regra: refPointOfInterest da restrição deve ser uma Beach",
+      "urn:ngsi-ld:Event:restricao-banho-praia-modelo-20261224.refPointOfInterest aponta para tipo Hotel, esperado Beach ou PointOfInterest"
+    ]
+  },
+  "relacionamento-como-propriedade": {
+    "deve_falhar_com": "schema",
+    "erros_obtidos": [
+      "schema: refHotel: 'object' is a required property",
+      "schema: refHotel: Additional properties are not allowed ('value' was unexpected)",
+      "schema: refHotel/type: 'Relationship' was expected"
+    ]
+  },
+  "coordenadas-invertidas-tipo": {
+    "deve_falhar_com": "location",
+    "erros_obtidos": [
+      "schema: location/value/type: 'Point' was expected"
+    ]
+  },
+  "ponto-de-coleta-sem-praia": {
+    "deve_falhar_com": "refBeach",
+    "erros_obtidos": [
+      "regra: ponto de coleta exige refBeach"
+    ]
+  },
+  "pH-fora-da-faixa": {
+    "deve_falhar_com": "pH",
+    "erros_obtidos": [
+      "schema: pH/value: 15 is greater than the maximum of 14"
+    ]
+  },
+  "sonda-sem-turbidez": {
+    "deve_falhar_com": "turbidity",
+    "erros_obtidos": [
+      "schema: (raiz): 'turbidity' is a required property"
+    ]
+  },
+  "chuva-negativa": {
+    "deve_falhar_com": "precipitation",
+    "erros_obtidos": [
+      "schema: precipitation/value: -1 is less than the minimum of 0"
+    ]
+  },
+  "chuva-sem-intervalo": {
+    "deve_falhar_com": "precipitationIntervalMinutes",
+    "erros_obtidos": [
+      "schema: (raiz): 'precipitationIntervalMinutes' is a required property"
+    ]
+  },
+  "laudo-validade-invertida": {
+    "deve_falhar_com": "validFrom",
+    "erros_obtidos": [
+      "regra: validFrom deve ser anterior a validUntil"
+    ]
+  },
+  "estado-por-laudo-sem-laudo": {
+    "deve_falhar_com": "refBathingReport",
+    "erros_obtidos": [
+      "regra: basis=report exige refBathingReport"
+    ]
+  },
+  "estado-diverge-do-laudo": {
+    "deve_falhar_com": "result",
+    "erros_obtidos": [
+      "regra: status difere do result do laudo"
+    ]
+  },
+  "estado-sem-base-mas-proprio": {
+    "deve_falhar_com": "indeterminate",
+    "erros_obtidos": [
+      "regra: basis=none exige status=indeterminate"
+    ]
+  },
+  "estimativa-sem-risco": {
+    "deve_falhar_com": "estimatedRiskLevel",
+    "erros_obtidos": [
+      "regra: basis=estimate exige estimatedRiskLevel"
+    ]
+  },
+  "id-com-prefixo-errado": {
+    "deve_falhar_com": "schema",
+    "erros_obtidos": [
+      "schema: id: 'urn:ngsi-ld:Restaurant:x' does not match '^urn:ngsi-ld:Hotel:[A-Za-z0-9._:-]+$'"
+    ]
+  }
+}

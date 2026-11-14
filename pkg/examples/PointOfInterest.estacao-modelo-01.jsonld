@@ -1,0 +1,31 @@
+{
+  "id": "urn:ngsi-ld:PointOfInterest:estacao-modelo-01",
+  "type": "PointOfInterest",
+  "name": {
+    "type": "Property",
+    "value": "Estação meteorológica modelo 01"
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.2,
+        -5.78
+      ]
+    }
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-governo-001"
+  },
+  "category": {
+    "type": "Property",
+    "value": [
+      "weatherStation"
+    ]
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

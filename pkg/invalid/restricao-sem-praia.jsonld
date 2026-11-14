@@ -1,0 +1,63 @@
+{
+  "id": "urn:ngsi-ld:Event:restricao-banho-praia-modelo-20261224",
+  "type": "Event",
+  "name": {
+    "type": "Property",
+    "value": "Restrição de banho: Praia Modelo do Farol"
+  },
+  "startDate": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-24T00:00:00Z"
+    }
+  },
+  "endDate": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-26T00:00:00Z"
+    }
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.199,
+        -5.779
+      ]
+    }
+  },
+  "address": {
+    "type": "Property",
+    "value": {
+      "streetAddress": "Orla Modelo",
+      "addressLocality": "Natal",
+      "addressCountry": "BR"
+    }
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-governo-001"
+  },
+  "category": {
+    "type": "Property",
+    "value": [
+      "bathingRestriction"
+    ]
+  },
+  "eventStatus": {
+    "type": "Property",
+    "value": [
+      "scheduled"
+    ]
+  },
+  "description": {
+    "type": "Property",
+    "value": "Restrição fictícia de banho para teste de calendário."
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

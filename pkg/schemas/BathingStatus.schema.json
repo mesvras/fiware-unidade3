@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/natal/schemas/BathingStatus.schema.json",
+  "title": "BathingStatus",
+  "description": "Estado de banho consolidado de uma praia; uma entidade por praia, atualizada no lugar.",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "refBeach",
+    "dataOwner",
+    "status",
+    "basis",
+    "computedAt"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^urn:ngsi-ld:BathingStatus:[A-Za-z0-9._:-]+$"
+    },
+    "type": {
+      "const": "BathingStatus"
+    },
+    "@context": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ]
+          }
+        }
+      ]
+    },
+    "refBeach": {
+      "type": "object",
+      "required": [
+        "type",
+        "object"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Relationship"
+        },
+        "object": {
+          "type": "string",
+          "pattern": "^urn:ngsi-ld:(Beach):[A-Za-z0-9._:-]+$"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "dataOwner": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{3,64}$"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "enum": [
+            "proper",
+            "improper",
+            "alert",
+            "indeterminate"
+          ]
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "basis": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "enum": [
+            "report",
+            "estimate",
+            "none"
+          ]
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "computedAt": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "object",
+          "required": [
+            "@type",
+            "@value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "@type": {
+              "const": "DateTime"
+            },
+            "@value": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+            }
+          }
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "validUntil": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "object",
+          "required": [
+            "@type",
+            "@value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "@type": {
+              "const": "DateTime"
+            },
+            "@value": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+            }
+          }
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "refBathingReport": {
+      "type": "object",
+      "required": [
+        "type",
+        "object"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Relationship"
+        },
+        "object": {
+          "type": "string",
+          "pattern": "^urn:ngsi-ld:(BathingReport):[A-Za-z0-9._:-]+$"
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "estimatedRiskLevel": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "enum": [
+            "low",
+            "moderate",
+            "high"
+          ]
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "rainfall24h": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    },
+    "rainfall72h": {
+      "type": "object",
+      "required": [
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "Property"
+        },
+        "value": {
+          "type": "number",
+          "minimum": 0
+        },
+        "observedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

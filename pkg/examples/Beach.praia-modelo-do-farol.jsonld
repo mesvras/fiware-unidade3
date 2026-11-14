@@ -1,0 +1,76 @@
+{
+  "id": "urn:ngsi-ld:Beach:praia-modelo-do-farol",
+  "type": "Beach",
+  "name": {
+    "type": "Property",
+    "value": "Praia Modelo do Farol"
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.199,
+        -5.779
+      ]
+    }
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-governo-001"
+  },
+  "beachType": {
+    "type": "Property",
+    "value": [
+      "urban",
+      "calmWaters"
+    ]
+  },
+  "facilities": {
+    "type": "Property",
+    "value": [
+      "promenade",
+      "showers",
+      "lifeGuard"
+    ]
+  },
+  "accessType": {
+    "type": "Property",
+    "value": [
+      "privateVehicle",
+      "onFoot",
+      "publicTransport"
+    ]
+  },
+  "length": {
+    "type": "Property",
+    "value": 1800
+  },
+  "width": {
+    "type": "Property",
+    "value": 60
+  },
+  "occupationRate": {
+    "type": "Property",
+    "value": "medium"
+  },
+  "refWeatherStation": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:PointOfInterest:estacao-modelo-01"
+  },
+  "address": {
+    "type": "Property",
+    "value": {
+      "streetAddress": "Orla Modelo",
+      "addressLocality": "Natal",
+      "addressCountry": "BR"
+    }
+  },
+  "description": {
+    "type": "Property",
+    "value": "Praia fictícia; coordenadas ilustrativas, não representam local real."
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

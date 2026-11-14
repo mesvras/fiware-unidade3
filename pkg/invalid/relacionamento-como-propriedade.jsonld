@@ -1,0 +1,35 @@
+{
+  "id": "urn:ngsi-ld:RoomType:hotel-modelo-farol:standard",
+  "type": "RoomType",
+  "name": {
+    "type": "Property",
+    "value": "Standard casal"
+  },
+  "refHotel": {
+    "type": "Property",
+    "value": "urn:ngsi-ld:Hotel:hotel-modelo-farol"
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-exemplo-001"
+  },
+  "maxAdults": {
+    "type": "Property",
+    "value": 2
+  },
+  "maxChildren": {
+    "type": "Property",
+    "value": 1
+  },
+  "totalUnits": {
+    "type": "Property",
+    "value": 20
+  },
+  "bedConfiguration": {
+    "type": "Property",
+    "value": "1 cama de casal"
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

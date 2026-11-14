@@ -1,0 +1,38 @@
+{
+  "id": "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220",
+  "type": "RoomAvailability",
+  "refHotel": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:Hotel:hotel-modelo-farol"
+  },
+  "refRoomType": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:RoomType:hotel-modelo-farol:standard"
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-exemplo-001"
+  },
+  "stayDate": {
+    "type": "Property",
+    "value": {
+      "@type": "Date",
+      "@value": "2026-12-20"
+    }
+  },
+  "availableUnits": {
+    "type": "Property",
+    "value": 6
+  },
+  "pricePerNight": {
+    "type": "Property",
+    "value": 420.0,
+    "currency": {
+      "type": "Property",
+      "value": "BRL"
+    }
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

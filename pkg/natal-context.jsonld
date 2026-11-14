@@ -1,0 +1,143 @@
+{
+  "@context": [
+    "https://smartdatamodels.org/context.jsonld",
+    {
+      "natal": "https://example.org/natal/ns#",
+      "Hotel": {
+        "@id": "https://example.org/natal/ns#Hotel"
+      },
+      "RoomType": {
+        "@id": "https://example.org/natal/ns#RoomType"
+      },
+      "RoomAvailability": {
+        "@id": "https://example.org/natal/ns#RoomAvailability"
+      },
+      "Restaurant": {
+        "@id": "https://example.org/natal/ns#Restaurant"
+      },
+      "BathingReport": {
+        "@id": "https://example.org/natal/ns#BathingReport"
+      },
+      "BathingStatus": {
+        "@id": "https://example.org/natal/ns#BathingStatus"
+      },
+      "dataOwner": {
+        "@id": "https://example.org/natal/ns#dataOwner"
+      },
+      "category": {
+        "@id": "https://smartdatamodels.org/dataModel.TourismDestinations/category"
+      },
+      "starRating": {
+        "@id": "https://example.org/natal/ns#starRating"
+      },
+      "checkInTime": {
+        "@id": "https://example.org/natal/ns#checkInTime"
+      },
+      "checkOutTime": {
+        "@id": "https://example.org/natal/ns#checkOutTime"
+      },
+      "amenities": {
+        "@id": "https://example.org/natal/ns#amenities"
+      },
+      "refHotel": {
+        "@id": "https://example.org/natal/ns#refHotel"
+      },
+      "maxAdults": {
+        "@id": "https://example.org/natal/ns#maxAdults"
+      },
+      "maxChildren": {
+        "@id": "https://example.org/natal/ns#maxChildren"
+      },
+      "totalUnits": {
+        "@id": "https://example.org/natal/ns#totalUnits"
+      },
+      "bedConfiguration": {
+        "@id": "https://example.org/natal/ns#bedConfiguration"
+      },
+      "refRoomType": {
+        "@id": "https://example.org/natal/ns#refRoomType"
+      },
+      "stayDate": {
+        "@id": "https://example.org/natal/ns#stayDate"
+      },
+      "availableUnits": {
+        "@id": "https://example.org/natal/ns#availableUnits"
+      },
+      "pricePerNight": {
+        "@id": "https://example.org/natal/ns#pricePerNight"
+      },
+      "currency": {
+        "@id": "https://example.org/natal/ns#currency"
+      },
+      "minimumStay": {
+        "@id": "https://example.org/natal/ns#minimumStay"
+      },
+      "availabilityLevel": {
+        "@id": "https://example.org/natal/ns#availabilityLevel"
+      },
+      "cuisine": {
+        "@id": "https://example.org/natal/ns#cuisine"
+      },
+      "eventScale": {
+        "@id": "https://example.org/natal/ns#eventScale"
+      },
+      "venueName": {
+        "@id": "https://example.org/natal/ns#venueName"
+      },
+      "refWeatherStation": {
+        "@id": "https://example.org/natal/ns#refWeatherStation"
+      },
+      "refBeach": {
+        "@id": "https://example.org/natal/ns#refBeach"
+      },
+      "precipitationIntervalMinutes": {
+        "@id": "https://example.org/natal/ns#precipitationIntervalMinutes"
+      },
+      "result": {
+        "@id": "https://example.org/natal/ns#result"
+      },
+      "collectionDate": {
+        "@id": "https://example.org/natal/ns#collectionDate"
+      },
+      "validFrom": {
+        "@id": "https://example.org/natal/ns#validFrom"
+      },
+      "validUntil": {
+        "@id": "https://example.org/natal/ns#validUntil"
+      },
+      "issuingAuthority": {
+        "@id": "https://example.org/natal/ns#issuingAuthority"
+      },
+      "reportNumber": {
+        "@id": "https://example.org/natal/ns#reportNumber"
+      },
+      "documentURL": {
+        "@id": "https://example.org/natal/ns#documentURL"
+      },
+      "status": {
+        "@id": "https://example.org/natal/ns#status"
+      },
+      "basis": {
+        "@id": "https://example.org/natal/ns#basis"
+      },
+      "computedAt": {
+        "@id": "https://example.org/natal/ns#computedAt"
+      },
+      "refBathingReport": {
+        "@id": "https://example.org/natal/ns#refBathingReport"
+      },
+      "estimatedRiskLevel": {
+        "@id": "https://example.org/natal/ns#estimatedRiskLevel"
+      },
+      "rainfall24h": {
+        "@id": "https://example.org/natal/ns#rainfall24h"
+      },
+      "rainfall72h": {
+        "@id": "https://example.org/natal/ns#rainfall72h"
+      },
+      "refPointOfInterest": {
+        "@id": "https://smartdatamodels.org/dataModel.TourismDestinations/refPointOfInterest"
+      }
+    }
+  ]
+}

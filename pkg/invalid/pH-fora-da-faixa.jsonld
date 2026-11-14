@@ -1,0 +1,56 @@
+{
+  "id": "urn:ngsi-ld:WaterQualityObserved:coleta-modelo-farol-01:20261220T120000Z",
+  "type": "WaterQualityObserved",
+  "dateObserved": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-20T12:00:00Z"
+    }
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.1992,
+        -5.7793
+      ]
+    }
+  },
+  "refPointOfInterest": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:PointOfInterest:coleta-modelo-farol-01"
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "fonte-sonda-001"
+  },
+  "turbidity": {
+    "type": "Property",
+    "value": 8.4
+  },
+  "salinity": {
+    "type": "Property",
+    "value": 34.1
+  },
+  "temperature": {
+    "type": "Property",
+    "value": 28.6
+  },
+  "pH": {
+    "type": "Property",
+    "value": 15
+  },
+  "O2": {
+    "type": "Property",
+    "value": 6.3
+  },
+  "source": {
+    "type": "Property",
+    "value": "simulador-sondas"
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

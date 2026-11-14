@@ -1,0 +1,64 @@
+{
+  "id": "urn:ngsi-ld:BathingReport:praia-modelo-do-farol:laudo-2026-0451",
+  "type": "BathingReport",
+  "refBeach": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:Beach:praia-modelo-do-farol"
+  },
+  "refPointOfInterest": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:PointOfInterest:coleta-modelo-farol-01"
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-governo-001"
+  },
+  "result": {
+    "type": "Property",
+    "value": "proper"
+  },
+  "collectionDate": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-15T09:00:00Z"
+    }
+  },
+  "validFrom": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-16T00:00:00Z"
+    }
+  },
+  "validUntil": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-10T00:00:00Z"
+    }
+  },
+  "issuingAuthority": {
+    "type": "Property",
+    "value": "Órgão Ambiental Modelo"
+  },
+  "reportNumber": {
+    "type": "Property",
+    "value": "2026/0451"
+  },
+  "escherichiaColi": {
+    "type": "Property",
+    "value": 120
+  },
+  "enterococci": {
+    "type": "Property",
+    "value": 18
+  },
+  "documentURL": {
+    "type": "Property",
+    "value": "https://laudos.example/2026-0451.pdf"
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

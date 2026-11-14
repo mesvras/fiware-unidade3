@@ -1,0 +1,97 @@
+{
+  "id": "urn:ngsi-ld:Event:show-bar-modelo-20261220",
+  "type": "Event",
+  "name": {
+    "type": "Property",
+    "value": "Show acústico no Bar Modelo"
+  },
+  "startDate": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-20T22:00:00Z"
+    }
+  },
+  "endDate": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-21T00:30:00Z"
+    }
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.2071,
+        -5.8695
+      ]
+    }
+  },
+  "address": {
+    "type": "Property",
+    "value": {
+      "streetAddress": "Rua Exemplo, 15",
+      "addressLocality": "Natal",
+      "addressCountry": "BR"
+    }
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-exemplo-003"
+  },
+  "category": {
+    "type": "Property",
+    "value": [
+      "spectacle"
+    ]
+  },
+  "eventStatus": {
+    "type": "Property",
+    "value": [
+      "scheduled"
+    ]
+  },
+  "venueName": {
+    "type": "Property",
+    "value": "Bar Modelo"
+  },
+  "maximumAttendeeCapacity": {
+    "type": "Property",
+    "value": 60
+  },
+  "isAccessibleForFree": {
+    "type": "Property",
+    "value": false
+  },
+  "eventPriceFrom": {
+    "type": "Property",
+    "value": 30.0,
+    "currency": {
+      "type": "Property",
+      "value": "BRL"
+    }
+  },
+  "eventPriceTo": {
+    "type": "Property",
+    "value": 30.0,
+    "currency": {
+      "type": "Property",
+      "value": "BRL"
+    }
+  },
+  "audience": {
+    "type": "Property",
+    "value": [
+      "adult"
+    ]
+  },
+  "description": {
+    "type": "Property",
+    "value": "Apresentação fictícia em bar."
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

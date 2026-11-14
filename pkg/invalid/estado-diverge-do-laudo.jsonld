@@ -1,0 +1,49 @@
+{
+  "id": "urn:ngsi-ld:BathingStatus:praia-modelo-do-farol",
+  "type": "BathingStatus",
+  "refBeach": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:Beach:praia-modelo-do-farol"
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-governo-001"
+  },
+  "status": {
+    "type": "Property",
+    "value": "improper"
+  },
+  "basis": {
+    "type": "Property",
+    "value": "report"
+  },
+  "computedAt": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-20T12:05:00Z"
+    }
+  },
+  "validUntil": {
+    "type": "Property",
+    "value": {
+      "@type": "DateTime",
+      "@value": "2026-12-23T00:00:00Z"
+    }
+  },
+  "refBathingReport": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:BathingReport:praia-modelo-do-farol:laudo-2026-0451"
+  },
+  "rainfall24h": {
+    "type": "Property",
+    "value": 2.4
+  },
+  "rainfall72h": {
+    "type": "Property",
+    "value": 5.0
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "urn:ngsi-ld:Hotel:hotel-modelo-farol",
+  "type": "Hotel",
+  "name": {
+    "type": "Property",
+    "value": "Hotel Modelo Farol"
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.205,
+        -5.87
+      ]
+    }
+  },
+  "address": {
+    "type": "Property",
+    "value": {
+      "streetAddress": "Rua Exemplo, 100",
+      "addressLocality": "Natal",
+      "addressCountry": "BR",
+      "postalCode": "59000-000"
+    }
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-exemplo-001"
+  },
+  "category": {
+    "type": "Property",
+    "value": "hotel"
+  },
+  "checkInTime": {
+    "type": "Property",
+    "value": "14:00"
+  },
+  "checkOutTime": {
+    "type": "Property",
+    "value": "12:00"
+  },
+  "amenities": {
+    "type": "Property",
+    "value": [
+      "wifi",
+      "pool",
+      "breakfast",
+      "beachfront"
+    ]
+  },
+  "contactPoint": {
+    "type": "Property",
+    "value": {
+      "telephone": "+55 84 0000-0000",
+      "url": "https://hotel-modelo.example"
+    }
+  },
+  "description": {
+    "type": "Property",
+    "value": "Hotel fictício usado apenas para testes."
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ],
+  "starRatin": {
+    "type": "Property",
+    "value": 4
+  }
+}
