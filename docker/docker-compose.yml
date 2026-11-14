@@ -113,6 +113,20 @@ services:
       retries: 6
       start_period: 15s
 
+  context:
+    image: nginx:${NGINX_VERSION:?defina NGINX_VERSION no .env}
+    restart: unless-stopped
+    networks: [internal]
+    volumes:
+      - ./context/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../pkg:/srv/pkg:ro
+    healthcheck:
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://127.0.0.1/natal-context.jsonld"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+
 networks:
   internal:
     internal: true
