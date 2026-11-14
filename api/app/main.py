@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from . import errors
 from .config import settings
 from .orion import Orion, OrionUnavailable
-from .routers import availability, hotels, venues
+from .routers import availability, events, hotels, venues
 
 
 @asynccontextmanager
@@ -22,6 +22,7 @@ app.include_router(hotels.router)
 app.include_router(availability.router)
 app.include_router(venues.restaurants)
 app.include_router(venues.bars)
+app.include_router(events.router)
 
 
 @app.get("/health")
