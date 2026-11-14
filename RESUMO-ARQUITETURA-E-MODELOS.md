@@ -162,9 +162,12 @@ Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em t
 
 ## 6. Pontos em aberto
 
-- Trocar o endereço provisório `https://example.org/natal/` do `@context` pelo domínio real.
 - Confirmar com os dados reais as unidades de turbidez (NTU) e salinidade (PSU).
-- Definir na TASK-10 qual `status` uma estimativa produz e os limiares de `availabilityLevel` dos restaurantes.
-- Decidir se os valores extras de enum (`bathingRestriction`, `bathingSamplingPoint`, `weatherStation`) ficam como extensão do projeto; um validador estrito do SDM os rejeitaria.
+- Definir na TASK-10 qual `status` uma estimativa produz, os limiares de `availabilityLevel` e se a estimativa usa `WaterQualityPredicted` do SDM.
 - Confirmar se QuantumLeap e CrateDB continuam no escopo.
-- Subir um Orion-LD e testar upsert e consultas sobre os exemplos.
+- Testar upsert e consultas sobre os exemplos em um Orion-LD real, junto da TASK-04.
+
+## 7. Decisões registradas
+
+- O endereço provisório `https://example.org/natal/` do `@context` fica como está.
+- Os valores extras de `category` ficam como extensão do projeto. Só `Event.category` conflita com o SDM, por ter enum fechado: o valor `bathingRestriction` não existe nele. O `category` do `PointOfInterest` é texto livre no SDM, então `bathingSamplingPoint`, `weatherStation`, `restaurant` e `bar` não conflitam. O conflito é aceito.
