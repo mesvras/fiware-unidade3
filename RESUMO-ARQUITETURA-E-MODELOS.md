@@ -164,10 +164,12 @@ Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em t
 
 - Confirmar com os dados reais as unidades de turbidez (NTU) e salinidade (PSU).
 - Definir na TASK-10 qual `status` uma estimativa produz, os limiares de `availabilityLevel` e se a estimativa usa `WaterQualityPredicted` do SDM.
-- Confirmar se QuantumLeap e CrateDB continuam no escopo.
-- Testar upsert e consultas sobre os exemplos em um Orion-LD real, junto da TASK-04.
+- Na TASK-13, criar as tabelas do CrateDB com colunas `DOUBLE` antes da primeira notificação; o QuantumLeap fixa o tipo da coluna pelo primeiro valor e trunca decimais.
 
 ## 7. Decisões registradas
 
+- QuantumLeap e CrateDB continuam no escopo.
+- A stack da TASK-04 usa Orion-LD 1.12.0 com `-mongocOnly` e MongoDB 7. O driver padrão do Orion-LD não funciona com MongoDB 6 ou superior.
+- Os 17 exemplos foram testados em um Orion-LD real pelo `docker/smoke-test.sh`: upsert, leitura de volta e consultas por categoria, relacionamento, distância e janela de datas.
 - O endereço provisório `https://example.org/natal/` do `@context` fica como está.
 - Os valores extras de `category` ficam como extensão do projeto. Só `Event.category` conflita com o SDM, por ter enum fechado: o valor `bathingRestriction` não existe nele. O `category` do `PointOfInterest` é texto livre no SDM, então `bathingSamplingPoint`, `weatherStation`, `restaurant` e `bar` não conflitam. O conflito é aceito.

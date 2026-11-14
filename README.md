@@ -87,7 +87,7 @@ Laudo oficial e estimativa por sondas são consolidados em um único `BathingSta
 
 ```
 pkg/           @context, vocabulário schema.org, JSON Schemas, exemplos NGSI-LD e validador
-docker/        Docker Compose da stack (Orion-LD, MongoDB, Mosquitto, IoT Agent, QuantumLeap, CrateDB, Keycloak, APISIX, Grafana)
+docker/        Docker Compose da stack (Orion-LD, MongoDB, Mosquitto, IoT Agent, QuantumLeap, CrateDB, servidor de contextos) e smoke test
 api/           API da plataforma
 simulators/    simuladores de hotéis, restaurantes, eventos, laudos, sondas e estação
 llm/           serviço de roteiros
@@ -96,7 +96,20 @@ docs/          arquitetura, modelos e decisões
 
 ## Como executar
 
-A stack ainda não existe. Quando a TASK-04 for concluída, esta seção terá os comandos de subida e a configuração das variáveis de ambiente. Para validar os modelos de dados hoje:
+Requisitos: Docker com Compose v2 e `vm.max_map_count` de pelo menos 262144 no host (exigência do CrateDB).
+
+```bash
+cd docker
+cp .env.example .env
+docker compose up -d --wait
+./smoke-test.sh
+```
+
+A stack sobe Orion-LD, MongoDB, Mosquitto, IoT Agent JSON, CrateDB, QuantumLeap e um servidor de contextos em uma rede interna, sem portas publicadas. As versões ficam fixas no `.env`. O `smoke-test.sh` verifica a comunicação entre os serviços e carrega os exemplos de `pkg/` no Orion-LD. Versões, decisões e limitações conhecidas estão em [`docker/README.md`](docker/README.md).
+
+Keycloak, APISIX e Grafana entram nas TASK-16, TASK-17 e TASK-21.
+
+Para validar os modelos de dados:
 
 ```bash
 pip install pyld jsonschema
@@ -118,6 +131,7 @@ python3 -I pkg/tools/validate.py
 
 - Dados simulados; coordenadas e nomes são ilustrativos.
 - A estimativa de balneabilidade não substitui o laudo oficial.
+- MongoDB, Mosquitto e CrateDB rodam sem autenticação, acessíveis só pela rede interna. A autenticação do Mosquitto entra na TASK-11.
 
 ## Licença
 
