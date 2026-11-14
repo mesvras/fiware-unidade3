@@ -13,6 +13,8 @@ fail() { echo "  FALHA $1${2:+: $2}"; FAILS=$((FAILS + 1)); }
 expect() { if [ "$2" = "$3" ]; then ok "$1"; else fail "$1" "esperado $3, obtido $2"; fi; }
 
 orion() { docker compose exec -T orion curl -sS -m 20 -H "NGSILD-Tenant: $TENANT" "$@"; }
+api() { local method=$1 path=$2; shift 2; docker compose exec -T orion curl -sS -m 20 -X "$method" -H 'Content-Type: application/json' "$@" "http://api:8000$path" < /dev/null; }
+status() { api "$@" -o /dev/null -w '%{http_code}'; }
 ql() { docker compose exec -T quantumleap curl -sS -m 20 -H "Fiware-Service: $TENANT" "$@"; }
 sql() { docker compose exec -T crate curl -sS -m 20 -X POST http://localhost:4200/_sql -H 'Content-Type: application/json' -d "{\"stmt\":\"$1\"}"; }
 iota() {
@@ -35,6 +37,10 @@ cleanup() {
   for type in $types; do
     ids=$(orion -G http://localhost:1026/ngsi-ld/v1/entities -H "$LINK" --data-urlencode "type=$type" --data-urlencode limit=1000 | json 'json.dumps([e["id"] for e in d])' 2>/dev/null)
     [ -n "$ids" ] && [ "$ids" != "[]" ] && orion -X POST http://localhost:1026/ngsi-ld/v1/entityOperations/delete -H 'Content-Type: application/json' -d "$ids" -o /dev/null
+  done
+  for path in /v1/events/smoke-show /v1/restaurants/smoke-rest /v1/bars/smoke-bar \
+              /v1/hotels/smoke-hotel/availability/std/2026-12-20 /v1/hotels/smoke-hotel/room-types/std /v1/hotels/smoke-hotel; do
+    api DELETE "$path" -o /dev/null 2>/dev/null
   done
   rm -rf "$WORK"
 }
@@ -74,6 +80,26 @@ for _ in $(seq 15); do
 done
 expect "histórico no QuantumLeap" "$series" "[25.5, 26.5]"
 orion -X DELETE http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:SmokeSeries:1 -o /dev/null
+
+echo "== API da plataforma"
+expect "hotel criado pela API" "$(status POST /v1/hotels -d '{"id":"smoke-hotel","name":"Hotel Smoke","location":[-35.205,-5.87],"address":{"addressLocality":"Natal"}}')" "201"
+expect "tipo de quarto criado" "$(status POST /v1/hotels/smoke-hotel/room-types -d '{"id":"std","name":"Std","maxAdults":2,"maxChildren":1,"totalUnits":3}')" "201"
+expect "disponibilidade criada" "$(status POST /v1/hotels/smoke-hotel/availability -d '{"roomType":"std","stayDate":"2026-12-20","availableUnits":2,"pricePerNight":{"value":250.0,"currency":"BRL"}}')" "201"
+offers=$(api GET "/v1/availability?checkIn=2026-12-20&checkOut=2026-12-21&adults=2" | json '[float(o["totalPrice"]["value"]) for o in d if o["hotel"] == "smoke-hotel"]')
+expect "busca por período e grupo" "$offers" "[250.0]"
+expect "bar criado" "$(status POST /v1/bars -d '{"id":"smoke-bar","name":"Bar Smoke","location":[-35.2071,-5.8695],"address":{"addressLocality":"Natal"},"capacity":40,"occupancy":35}')" "201"
+expect "restaurante criado" "$(status POST /v1/restaurants -d '{"id":"smoke-rest","name":"Rest Smoke","location":[-35.2062,-5.8688],"address":{"addressLocality":"Natal"},"capacity":80,"occupancy":10}')" "201"
+expect "evento no bar criado" "$(status POST /v1/events -d '{"id":"smoke-show","name":"Show Smoke","startDate":"2026-12-20T22:00:00Z","endDate":"2026-12-21T00:30:00Z","location":[-35.2071,-5.8695],"address":{"addressLocality":"Natal"},"category":["spectacle"],"eventScale":"small","eventStatus":["scheduled"],"refPointOfInterest":{"bar":"smoke-bar"}}')" "201"
+level=$(docker compose exec -T orion curl -sS -m 20 http://localhost:1026/ngsi-ld/v1/entities/urn:ngsi-ld:PointOfInterest:smoke-bar -H "$LINK" < /dev/null | json 'd["availabilityLevel"]["value"]')
+expect "Orion-LD recebe o que a API grava (availabilityLevel)" "$level" "limited"
+agenda=$(api GET "/v1/events?from=2026-12-20&to=2026-12-21&near=-35.2071,-5.8695&maxDistance=500" | json '[e["id"] for e in d if e["id"].startswith("smoke-")]')
+expect "agenda por janela e área" "$agenda" "['smoke-show']"
+expect "registro referenciado não é removido" "$(status DELETE /v1/bars/smoke-bar)" "409"
+for path in /v1/events/smoke-show /v1/restaurants/smoke-rest /v1/bars/smoke-bar /v1/hotels/smoke-hotel/availability/std/2026-12-20 \
+            /v1/hotels/smoke-hotel/room-types/std /v1/hotels/smoke-hotel; do
+  code=$(status DELETE "$path"); [ "$code" = "204" ] || fail "remoção de $path" "HTTP $code"
+done
+ok "remoção dos registros da API"
 
 echo "== Exemplos NGSI-LD"
 docker compose exec -T orion curl -sS -m 20 http://context/examples-batch.jsonld > "$WORK/batch.json"

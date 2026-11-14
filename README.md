@@ -105,9 +105,32 @@ docker compose up -d --wait
 ./smoke-test.sh
 ```
 
-A stack sobe Orion-LD, MongoDB, Mosquitto, IoT Agent JSON, CrateDB, QuantumLeap e um servidor de contextos em uma rede interna, sem portas publicadas. As versões ficam fixas no `.env`. O `smoke-test.sh` verifica a comunicação entre os serviços e carrega os exemplos de `pkg/` no Orion-LD. Versões, decisões e limitações conhecidas estão em [`docker/README.md`](docker/README.md).
+A stack sobe Orion-LD, MongoDB, Mosquitto, IoT Agent JSON, CrateDB, QuantumLeap, um servidor de contextos e a API da plataforma em uma rede interna, sem portas publicadas. As versões ficam fixas no `.env`. O `smoke-test.sh` verifica a comunicação entre os serviços, exercita a API e carrega os exemplos de `pkg/` no Orion-LD. Versões, decisões e limitações conhecidas estão em [`docker/README.md`](docker/README.md).
 
-Keycloak, APISIX e Grafana entram nas TASK-16, TASK-17 e TASK-21.
+Testes da API (unitários, de contrato e de autenticação):
+
+```bash
+docker compose --profile test run --rm --build api-tests
+```
+
+Keycloak, APISIX e Grafana entram nas TASK-16, TASK-17 e TASK-21. Até o Keycloak existir, o serviço `api` do Compose roda com a autenticação desligada (`AUTH_ENABLED=false`), e o perfil `test` usa um provedor de identidade de teste.
+
+### Rotas da API
+
+```
+Rota                                              Modelo NGSI-LD                  Papel para escrever
+------------------------------------------------  ------------------------------  -------------------
+/v1/hotels                                        Hotel                           hotelaria
+/v1/hotels/{hotel}/room-types                     RoomType                        hotelaria
+/v1/hotels/{hotel}/availability                   RoomAvailability                hotelaria
+/v1/availability (busca por período e grupo)      RoomType e RoomAvailability     só leitura
+/v1/restaurants, /v1/bars                         PointOfInterest (category)      bares-restaurantes
+/v1/events                                        Event                           produtor-cultural
+/v1/beaches                                       Beach                           gestor-governo
+/v1/sampling-points, /v1/weather-stations         PointOfInterest (category)      gestor-governo
+```
+
+As rotas aceitam e devolvem um formato JSON simplificado; `?format=normalized` devolve NGSI-LD. Toda rota exige token, exceto `/health`. Escrita exige o papel do recurso, e alteração e remoção exigem ser o dono do registro.
 
 Para validar os modelos de dados:
 

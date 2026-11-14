@@ -165,6 +165,9 @@ Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em t
 - Confirmar com os dados reais as unidades de turbidez (NTU) e salinidade (PSU).
 - Definir na TASK-10 qual `status` uma estimativa produz, os limiares de `availabilityLevel` e se a estimativa usa `WaterQualityPredicted` do SDM.
 - Na TASK-13, criar as tabelas do CrateDB com colunas `DOUBLE` antes da primeira notificação; o QuantumLeap fixa o tipo da coluna pelo primeiro valor e trunca decimais.
+- Na TASK-15, revisar a matriz provisória de papéis da API.
+- Na TASK-16, configurar o Keycloak para emitir `aud` igual a `natal-api`, a claim `owner_id` com o identificador da organização e os papéis do realm.
+- `cuisine` é texto livre e o filtro compara o valor exato; avaliar lista fechada ou padronização do texto.
 
 ## 7. Decisões registradas
 
@@ -173,3 +176,9 @@ Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em t
 - Os 17 exemplos foram testados em um Orion-LD real pelo `docker/smoke-test.sh`: upsert, leitura de volta e consultas por categoria, relacionamento, distância e janela de datas.
 - O endereço provisório `https://example.org/natal/` do `@context` fica como está.
 - Os valores extras de `category` ficam como extensão do projeto. Só `Event.category` conflita com o SDM, por ter enum fechado: o valor `bathingRestriction` não existe nele. O `category` do `PointOfInterest` é texto livre no SDM, então `bathingSamplingPoint`, `weatherStation`, `restaurant` e `bar` não conflitam. O conflito é aceito.
+- A API (TASK-05) usa Python 3.14 com FastAPI, fica em `api/` neste repositório e é a única que escreve no Orion-LD.
+- A API expõe rotas por domínio (`/v1/hotels`, `/v1/restaurants`, `/v1/events`...) sobre um motor comum guiado pelo `spec.py`: conversão do formato simplificado para NGSI-LD, validação com os schemas e as regras de `pkg/tools/checks.py`, e busca no Orion-LD das entidades referenciadas.
+- A API calcula `availabilityLevel` de restaurantes e bares a partir de `occupancy` e `capacity` (limiar de `limited` em 70%, configurável).
+- Consultas por data usam a forma `atributo[@value]` com texto entre aspas, porque o Orion-LD 1.12 compara datas como texto; a agenda filtra eventos por sobreposição à janela.
+- Autenticação por JWT conforme OWASP: algoritmos assimétricos, claims obrigatórias, JWKS com rotação, negação por padrão, autorização por papel e por dono do registro (`dataOwner` vindo de `owner_id` ou `sub`).
+- Matriz provisória de papéis: hotelaria escreve em hotéis; bares-restaurantes em restaurantes e bares; produtor-cultural em eventos; gestor-governo em praias, pontos de coleta e estações; qualquer usuário autenticado lê.
