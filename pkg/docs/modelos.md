@@ -411,3 +411,15 @@ Descrições dos atributos:
 - `estimatedRiskLevel`: Risco estimado. Não é laudo oficial.
 - `rainfall24h`: Chuva acumulada em 24 h, mm.
 - `rainfall72h`: Chuva acumulada em 72 h, mm.
+
+## Alinhamento com schema.org
+
+O arquivo `natal-vocab.jsonld` declara que termos do projeto são especializações de termos do schema.org. O `@context` não muda: os termos continuam com IRI próprio. Só entram os termos de significado equivalente.
+
+```
+Termo do projeto  Relação             Termo do schema.org
+----------------  ------------------  -------------------------------
+Hotel             rdfs:subClassOf     https://schema.org/Hotel
+checkInTime       rdfs:subPropertyOf  https://schema.org/checkinTime
+checkOutTime      rdfs:subPropertyOf  https://schema.org/checkoutTime
+```

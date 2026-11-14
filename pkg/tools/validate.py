@@ -120,6 +120,23 @@ def integrity(all_):
 def check_entity(e, all_):
     return schema_check(e) + expand_check(e) + rules(e, all_)
 
+def vocab_check():
+    errs = []
+    voc = json.load(open(os.path.join(ROOT,"natal-vocab.jsonld")))
+    ctx = json.load(open(os.path.join(ROOT,"natal-context.jsonld")))["@context"][1]
+    for n in jsonld.expand(voc):
+        i = n["@id"]; kinds = [k.rsplit("#",1)[1] for k in n if k.startswith("http://www.w3.org/2000/01/rdf-schema#sub")]
+        term = i[len(NS):]
+        if term not in SCHEMA_MAP: errs.append("vocabulário tem termo fora do mapa: "+term); continue
+        rel, target = SCHEMA_MAP[term]
+        if kinds != [rel]: errs.append("%s: relação %s, esperado %s" % (term, kinds, rel))
+        elif n["http://www.w3.org/2000/01/rdf-schema#"+rel][0]["@id"] != target: errs.append("%s: alvo diferente de %s" % (term, target))
+        if ctx.get(term, {}).get("@id") != i: errs.append("%s: IRI do contexto difere do vocabulário" % term)
+    seen = {n["@id"][len(NS):] for n in jsonld.expand(voc)}
+    for term in SCHEMA_MAP:
+        if term not in seen: errs.append("termo do mapa ausente no vocabulário: "+term)
+    return errs
+
 def run():
     ents = [json.load(open(f)) for f in sorted(glob.glob(os.path.join(ROOT,"examples","*.jsonld")))]
     fails = 0
@@ -133,6 +150,10 @@ def run():
     print("== Integridade referencial: %s" % ("OK" if not ie else "FALHA"))
     for x in ie: print("   - " + x)
     fails += bool(ie)
+    ve = vocab_check()
+    print("== Vocabulário schema.org: %s" % ("OK" if not ve else "FALHA"))
+    for x in ve: print("   - " + x)
+    fails += bool(ve)
     return ents, fails
 
 def mutate(ents):

@@ -91,6 +91,14 @@ def build_context():
     c.update(extra)
     return {"@context":[SDM_CTX, c]}
 
+def build_vocab():
+    graph = []
+    for term, (rel, target) in SCHEMA_MAP.items():
+        is_class = term in ENTITIES
+        graph.append({"@id": NS+term, "@type": "rdfs:Class" if is_class else "rdf:Property",
+                      "rdfs:"+rel: {"@id": target}})
+    return {"@context": {"rdf":"http://www.w3.org/1999/02/22-rdf-syntax-ns#","rdfs":"http://www.w3.org/2000/01/rdf-schema#"}, "@graph": graph}
+
 def pad_table(rows):
     w = [max(len(r[i]) for r in rows) for i in range(len(rows[0]))]
     out = []
@@ -132,6 +140,11 @@ def build_docs():
         md.append("Descrições dos atributos:\n")
         for a in e["attrs"]: md.append(f"- `{a['name']}`: {a['desc']}")
         md.append("")
+    md.append("## Alinhamento com schema.org\n")
+    md.append("O arquivo `natal-vocab.jsonld` declara que termos do projeto são especializações de termos do schema.org. O `@context` não muda: os termos continuam com IRI próprio. Só entram os termos de significado equivalente.\n")
+    rows = [["Termo do projeto","Relação","Termo do schema.org"]]
+    for term, (rel, target) in SCHEMA_MAP.items(): rows.append([term, "rdfs:"+rel, target])
+    md.append(pad_table(rows) + "\n")
     return "\n".join(md)
 
 if __name__ == "__main__":
@@ -139,5 +152,6 @@ if __name__ == "__main__":
     for e in ENTITIES.values():
         json.dump(entity_schema(e), open(os.path.join(ROOT,"schemas",e["name"]+".schema.json"),"w"), indent=2, ensure_ascii=False)
     json.dump(build_context(), open(os.path.join(ROOT,"natal-context.jsonld"),"w"), indent=2, ensure_ascii=False)
+    json.dump(build_vocab(), open(os.path.join(ROOT,"natal-vocab.jsonld"),"w"), indent=2, ensure_ascii=False)
     open(os.path.join(ROOT,"docs","modelos.md"),"w").write(build_docs())
     print("ok", len(ENTITIES), "entidades")

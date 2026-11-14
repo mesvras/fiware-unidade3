@@ -125,3 +125,10 @@ E("BathingStatus","Próprio","Estado de banho consolidado de uma praia; uma enti
   rules=["basis = none => status = indeterminate","basis = report => status igual ao result do laudo (proper ou improper)","basis = estimate => status diferente de proper sem laudo vigente é decisão da TASK-10"])
 
 CUSTOM_TYPES = ["Hotel","RoomType","RoomAvailability","BathingReport","BathingStatus"]
+
+SCHEMA_ORG = "https://schema.org/"
+SCHEMA_MAP = {
+  "Hotel": ("subClassOf", SCHEMA_ORG+"Hotel"),
+  "checkInTime": ("subPropertyOf", SCHEMA_ORG+"checkinTime"),
+  "checkOutTime": ("subPropertyOf", SCHEMA_ORG+"checkoutTime"),
+}

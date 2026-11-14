@@ -77,7 +77,7 @@ SDM             Beach, PointOfInterest, WaterQualityObserved, WeatherObserved, E
 Customizados    Hotel, RoomType, RoomAvailability, BathingReport, BathingStatus
 ```
 
-Detalhes, atributos e relacionamentos em [`docs/modelos.md`](docs/modelos.md). O contexto, os schemas e os exemplos ficam em [`models/`](models/).
+Detalhes, atributos e relacionamentos em [`docs/modelos.md`](docs/modelos.md). O contexto, o vocabulário com o alinhamento ao schema.org (`Hotel`, `checkInTime`, `checkOutTime`), os schemas e os exemplos ficam em [`pkg/`](pkg/).
 
 ## Balneabilidade
 
@@ -86,7 +86,7 @@ Laudo oficial e estimativa por sondas são consolidados em um único `BathingSta
 ## Estrutura do repositório
 
 ```
-models/        @context, JSON Schemas, exemplos NGSI-LD e validador
+pkg/           @context, vocabulário schema.org, JSON Schemas, exemplos NGSI-LD e validador
 docker/        Docker Compose da stack (Orion-LD, MongoDB, Mosquitto, IoT Agent, QuantumLeap, CrateDB, Keycloak, APISIX, Grafana)
 api/           API da plataforma
 simulators/    simuladores de hotéis, restaurantes, eventos, laudos, sondas e estação
@@ -100,7 +100,7 @@ A stack ainda não existe. Quando a TASK-04 for concluída, esta seção terá o
 
 ```bash
 pip install pyld jsonschema
-python3 -I models/tools/validate.py
+python3 -I pkg/tools/validate.py
 ```
 
 ## Segurança e privacidade

@@ -1,0 +1,29 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#"
+  },
+  "@graph": [
+    {
+      "@id": "https://example.org/natal/ns#Hotel",
+      "@type": "rdfs:Class",
+      "rdfs:subClassOf": {
+        "@id": "https://schema.org/Hotel"
+      }
+    },
+    {
+      "@id": "https://example.org/natal/ns#checkInTime",
+      "@type": "rdf:Property",
+      "rdfs:subPropertyOf": {
+        "@id": "https://schema.org/checkinTime"
+      }
+    },
+    {
+      "@id": "https://example.org/natal/ns#checkOutTime",
+      "@type": "rdf:Property",
+      "rdfs:subPropertyOf": {
+        "@id": "https://schema.org/checkoutTime"
+      }
+    }
+  ]
+}

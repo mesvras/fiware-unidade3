@@ -152,6 +152,7 @@ Decisões de modelagem:
 - Restrição de banho é um `Event` com categoria `bathingRestriction`, apontando para a praia.
 - `BathingStatus` é uma entidade por praia, atualizada no lugar. Seus campos `status` (`proper`, `improper`, `alert`, `indeterminate`) e `basis` (`report`, `estimate`, `none`) impedem tratar estimativa como laudo.
 - Todo registro de prestador, governo ou fonte tem `dataOwner`, preenchido pela API a partir do token.
+- `natal-vocab.jsonld` alinha ao schema.org só os termos de significado fiel: `Hotel` (`schema:Hotel`), `checkInTime` e `checkOutTime` (`schema:checkinTime` e `schema:checkoutTime`). Hotel continua tipo próprio: o SDM não tem modelo de hospedagem (verificado em `incubated`, `SmartDestination`, `CrossSector`, `TourismDestinations` e `PointOfInterest`).
 - Datas em UTC com valor tipado (`DateTime`, `Date`); coordenadas `[longitude, latitude]`; preços com sub-atributo `currency`; `occupancy` com `observedAt`.
 
 
