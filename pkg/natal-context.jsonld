@@ -12,9 +12,6 @@
       "RoomAvailability": {
         "@id": "https://example.org/natal/ns#RoomAvailability"
       },
-      "Restaurant": {
-        "@id": "https://example.org/natal/ns#Restaurant"
-      },
       "BathingReport": {
         "@id": "https://example.org/natal/ns#BathingReport"
       },
@@ -72,12 +69,6 @@
       "minimumStay": {
         "@id": "https://example.org/natal/ns#minimumStay"
       },
-      "availabilityLevel": {
-        "@id": "https://example.org/natal/ns#availabilityLevel"
-      },
-      "cuisine": {
-        "@id": "https://example.org/natal/ns#cuisine"
-      },
       "eventScale": {
         "@id": "https://example.org/natal/ns#eventScale"
       },
@@ -89,6 +80,12 @@
       },
       "refBeach": {
         "@id": "https://example.org/natal/ns#refBeach"
+      },
+      "availabilityLevel": {
+        "@id": "https://example.org/natal/ns#availabilityLevel"
+      },
+      "cuisine": {
+        "@id": "https://example.org/natal/ns#cuisine"
       },
       "precipitationIntervalMinutes": {
         "@id": "https://example.org/natal/ns#precipitationIntervalMinutes"

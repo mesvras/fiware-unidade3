@@ -62,8 +62,6 @@ def obj(e, a): return e.get(a, {}).get("object")
 def rules(e, all_):
     t = e["type"]; errs = []; byid = {x["id"]: x for x in all_}
     cats = val(e, "category") or []
-    if t == "Restaurant":
-        if val(e,"occupancy") is not None and val(e,"capacity") is not None and val(e,"occupancy") > val(e,"capacity"): errs.append("regra: occupancy maior que capacity")
     if t == "Event":
         if dt(e,"endDate") and dt(e,"startDate") and dt(e,"endDate") <= dt(e,"startDate"): errs.append("regra: endDate deve ser posterior a startDate")
         if "bathingRestriction" in cats:
@@ -72,7 +70,15 @@ def rules(e, all_):
             elif not tgt.startswith("urn:ngsi-ld:Beach:"): errs.append("regra: refPointOfInterest da restrição deve ser uma Beach")
         else:
             if "eventScale" not in e: errs.append("regra: eventScale obrigatório fora de restrição de banho")
-    if t == "PointOfInterest" and "bathingSamplingPoint" in cats and "refBeach" not in e: errs.append("regra: ponto de coleta exige refBeach")
+    if t == "PointOfInterest":
+        if "bathingSamplingPoint" in cats and "refBeach" not in e: errs.append("regra: ponto de coleta exige refBeach")
+        food = bool({"restaurant","bar"} & set(cats))
+        for a in ("address","capacity","occupancy"):
+            if food and a not in e: errs.append("regra: restaurante ou bar exige %s" % a)
+        if not food:
+            for a in ("capacity","occupancy","availabilityLevel","cuisine","priceRange","openingHoursSpecification"):
+                if a in e: errs.append("regra: %s só vale para restaurante ou bar" % a)
+        if val(e,"occupancy") is not None and val(e,"capacity") is not None and val(e,"occupancy") > val(e,"capacity"): errs.append("regra: occupancy maior que capacity")
     if t == "RoomAvailability":
         m = re.match(r"urn:ngsi-ld:RoomAvailability:[^:]+:[^:]+:(\d{8})$", e["id"])
         d = dt(e,"stayDate")
@@ -143,8 +149,8 @@ def mutate(ents):
     case("disponibilidade-maior-que-total", "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220", lambda e: e["availableUnits"].update(value=99), "totalUnits")
     case("data-do-id-diferente", "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220", lambda e: e["stayDate"]["value"].update({"@value":"2026-12-25"}), "stayDate")
     case("data-sem-tipo", "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220", lambda e: e["stayDate"].update(value="2026-12-20"), "schema")
-    case("ocupacao-sem-observedAt", "urn:ngsi-ld:Restaurant:restaurante-modelo-mare", lambda e: e["occupancy"].pop("observedAt") and None, "observedAt")
-    case("ocupacao-maior-que-capacidade", "urn:ngsi-ld:Restaurant:restaurante-modelo-mare", lambda e: e["occupancy"].update(value=200), "occupancy")
+    case("ocupacao-sem-observedAt", "urn:ngsi-ld:PointOfInterest:restaurante-modelo-mare", lambda e: e["occupancy"].pop("observedAt") and None, "observedAt")
+    case("ocupacao-maior-que-capacidade", "urn:ngsi-ld:PointOfInterest:restaurante-modelo-mare", lambda e: e["occupancy"].update(value=200), "occupancy")
     case("evento-termina-antes-de-comecar", "urn:ngsi-ld:Event:show-bar-modelo-20261220", lambda e: e["endDate"]["value"].update({"@value":"2026-12-20T20:00:00Z"}), "endDate")
     case("evento-sem-porte", "urn:ngsi-ld:Event:show-bar-modelo-20261220", lambda e: e.pop("eventScale") and None, "eventScale")
     case("restricao-sem-praia", "urn:ngsi-ld:Event:restricao-banho-praia-modelo-20261224", lambda e: e.pop("refPointOfInterest") and None, "refPointOfInterest")
@@ -161,7 +167,9 @@ def mutate(ents):
     case("estado-diverge-do-laudo", "urn:ngsi-ld:BathingStatus:praia-modelo-do-farol", lambda e: e["status"].update(value="improper"), "result")
     case("estado-sem-base-mas-proprio", "urn:ngsi-ld:BathingStatus:praia-modelo-do-farol", lambda e: (e["basis"].update(value="none"), e.pop("refBathingReport")) and None, "indeterminate")
     case("estimativa-sem-risco", "urn:ngsi-ld:BathingStatus:praia-modelo-do-farol", lambda e: (e["basis"].update(value="estimate"), e.pop("refBathingReport")) and None, "estimatedRiskLevel")
-    case("id-com-prefixo-errado", "urn:ngsi-ld:Hotel:hotel-modelo-farol", lambda e: e.update(id="urn:ngsi-ld:Restaurant:x"), "schema")
+    case("restaurante-sem-capacidade", "urn:ngsi-ld:PointOfInterest:restaurante-modelo-mare", lambda e: e.pop("capacity") and None, "capacity")
+    case("ponto-de-coleta-com-ocupacao", "urn:ngsi-ld:PointOfInterest:coleta-modelo-farol-01", lambda e: e.update(occupancy={"type":"Property","value":5,"observedAt":"2026-12-20T19:30:00Z"}), "occupancy")
+    case("id-com-prefixo-errado", "urn:ngsi-ld:Hotel:hotel-modelo-farol", lambda e: e.update(id="urn:ngsi-ld:RoomType:x"), "schema")
     return cases
 
 def run_invalid(ents):

@@ -1,0 +1,86 @@
+{
+  "id": "urn:ngsi-ld:PointOfInterest:restaurante-modelo-mare",
+  "type": "PointOfInterest",
+  "name": {
+    "type": "Property",
+    "value": "Restaurante Modelo Maré"
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.2062,
+        -5.8688
+      ]
+    }
+  },
+  "address": {
+    "type": "Property",
+    "value": {
+      "streetAddress": "Avenida Exemplo, 250",
+      "addressLocality": "Natal",
+      "addressCountry": "BR"
+    }
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-exemplo-002"
+  },
+  "category": {
+    "type": "Property",
+    "value": [
+      "restaurant"
+    ]
+  },
+  "capacity": {
+    "type": "Property",
+    "value": 80
+  },
+  "occupancy": {
+    "type": "Property",
+    "value": 52,
+    "observedAt": "2026-12-20T19:30:00Z"
+  },
+  "availabilityLevel": {
+    "type": "Property",
+    "value": "limited"
+  },
+  "cuisine": {
+    "type": "Property",
+    "value": [
+      "regional",
+      "frutos do mar"
+    ]
+  },
+  "priceRange": {
+    "type": "Property",
+    "value": "$$"
+  },
+  "openingHoursSpecification": {
+    "type": "Property",
+    "value": [
+      {
+        "dayOfWeek": [
+          "Friday",
+          "Saturday"
+        ],
+        "opens": "11:00",
+        "closes": "23:30"
+      }
+    ]
+  },
+  "contactPoint": {
+    "type": "Property",
+    "value": {
+      "telephone": "+55 84 0000-0001"
+    }
+  },
+  "description": {
+    "type": "Property",
+    "value": "Restaurante fictício para testes."
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ]
+}

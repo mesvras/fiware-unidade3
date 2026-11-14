@@ -102,51 +102,6 @@ Descrições dos atributos:
 - `pricePerNight`: Preço por unidade e noite. Sub-atributo currency obrigatório (ISO 4217).
 - `minimumStay`: Mínimo de noites.
 
-### Restaurant
-
-Restaurante, bar ou similar, com ocupação atual.
-
-- Origem: Próprio (não há modelo oficial)
-- Id: `urn:ngsi-ld:Restaurant:<slug>`
-
-```
-Atributo                   Tipo NGSI-LD  Tipo de dado                    Obrig.  Origem
--------------------------  ------------  ------------------------------  ------  ------
-name                       Property      texto                           Sim     SDM
-location                   GeoProperty   GeoJSON Point                   Sim     CORE
-address                    Property      objeto                          Sim     SDM
-dataOwner                  Property      texto                           Sim     EXT
-capacity                   Property      inteiro [1..]                   Sim     SDM
-occupancy                  Property      inteiro [0..]                   Sim     SDM
-availabilityLevel          Property      enum(available, limited, full)  Não     EXT
-cuisine                    Property      lista de texto                  Não     EXT
-priceRange                 Property      texto                           Não     SDM
-openingHoursSpecification  Property      objeto                          Não     SDM
-contactPoint               Property      objeto                          Não     SDM
-description                Property      texto                           Não     SDM
-source                     Property      texto                           Não     SDM
-```
-
-- `occupancy` exige `observedAt` no atributo.
-- Regra: occupancy <= capacity.
-- Regra: availabilityLevel coerente com a razão occupancy/capacity (limiares a definir na API).
-
-Descrições dos atributos:
-
-- `name`: Nome do estabelecimento.
-- `location`: Ponto GeoJSON [longitude, latitude], WGS84.
-- `address`: Endereço postal (addressLocality, streetAddress, postalCode, addressCountry).
-- `dataOwner`: Identificador opaco do dono do registro (claim do token no Keycloak). Preenchido pela API a partir do token; o valor enviado pelo cliente é ignorado.
-- `capacity`: Lugares totais.
-- `occupancy`: Lugares ocupados agora. Exige observedAt no atributo.
-- `availabilityLevel`: Derivado de occupancy/capacity (limiares configuráveis na API).
-- `cuisine`: Tipos de cozinha (texto livre).
-- `priceRange`: Faixa de preço, de $ a $$$$.
-- `openingHoursSpecification`: Lista de {dayOfWeek[], opens, closes}.
-- `contactPoint`: Contato comercial do estabelecimento (telephone, email, url). Nunca dados de pessoa física.
-- `description`: Texto descritivo. Tratado como entrada não confiável pela LLM.
-- `source`: Origem do dado (URL ou texto).
-
 ### Event
 
 Evento de qualquer porte, de apresentação em bar a congresso. Também representa restrição de banho (category bathingRestriction).
@@ -251,24 +206,41 @@ Descrições dos atributos:
 
 ### PointOfInterest
 
-Ponto de coleta de balneabilidade ou estação meteorológica, conforme category.
+Ponto de coleta de balneabilidade, estação meteorológica, restaurante ou bar, conforme category. Restaurante e bar guardam ocupação atual.
 
-- Origem: SDM dataModel.PointOfInterest/PointOfInterest (perfil)
+- Origem: SDM dataModel.PointOfInterest/PointOfInterest (perfil + extensões)
 - Id: `urn:ngsi-ld:PointOfInterest:<slug>`
 
 ```
-Atributo     Tipo NGSI-LD  Tipo de dado   Obrig.  Origem
------------  ------------  -------------  ------  ------
-name         Property      texto          Sim     SDM
-location     GeoProperty   GeoJSON Point  Sim     CORE
-dataOwner    Property      texto          Sim     EXT
-category     Property      lista de enum  Sim     SDM
-refBeach     Relationship  URI → Beach    Cond.   EXT
-description  Property      texto          Não     SDM
+Atributo                   Tipo NGSI-LD  Tipo de dado                    Obrig.  Origem
+-------------------------  ------------  ------------------------------  ------  ------
+name                       Property      texto                           Sim     SDM
+location                   GeoProperty   GeoJSON Point                   Sim     CORE
+dataOwner                  Property      texto                           Sim     EXT
+category                   Property      lista de enum                   Sim     SDM
+refBeach                   Relationship  URI → Beach                     Cond.   EXT
+address                    Property      objeto                          Cond.   SDM
+capacity                   Property      inteiro [1..]                   Cond.   SDM
+occupancy                  Property      inteiro [0..]                   Cond.   SDM
+availabilityLevel          Property      enum(available, limited, full)  Não     EXT
+cuisine                    Property      lista de texto                  Não     EXT
+priceRange                 Property      texto                           Não     SDM
+openingHoursSpecification  Property      objeto                          Não     SDM
+contactPoint               Property      objeto                          Não     SDM
+description                Property      texto                           Não     SDM
+source                     Property      texto                           Não     SDM
 ```
 
 - `refBeach`: obrigatório se category contém bathingSamplingPoint.
+- `address`: obrigatório se category contém restaurant ou bar.
+- `capacity`: obrigatório se category contém restaurant ou bar.
+- `occupancy`: obrigatório se category contém restaurant ou bar.
+- `occupancy` exige `observedAt` no atributo.
 - Regra: bathingSamplingPoint => refBeach presente.
+- Regra: restaurant ou bar => address, capacity e occupancy presentes.
+- Regra: occupancy <= capacity.
+- Regra: capacity, occupancy, availabilityLevel, cuisine, priceRange e openingHoursSpecification só em restaurant ou bar.
+- Regra: availabilityLevel coerente com a razão occupancy/capacity (limiares a definir na API).
 
 Descrições dos atributos:
 
@@ -277,7 +249,16 @@ Descrições dos atributos:
 - `dataOwner`: Identificador opaco do dono do registro (claim do token no Keycloak). Preenchido pela API a partir do token; o valor enviado pelo cliente é ignorado.
 - `category`: Função do ponto (extensão de valores do projeto).
 - `refBeach`: Praia a que o ponto de coleta pertence.
+- `address`: Endereço postal (addressLocality, streetAddress, postalCode, addressCountry).
+- `capacity`: Lugares totais.
+- `occupancy`: Lugares ocupados agora. Exige observedAt no atributo.
+- `availabilityLevel`: Só para restaurante e bar. Derivado de occupancy/capacity (limiares configuráveis na API).
+- `cuisine`: Só para restaurante e bar. Tipos de cozinha (texto livre).
+- `priceRange`: Só para restaurante e bar. Faixa de preço, de $ a $$$$.
+- `openingHoursSpecification`: Lista de {dayOfWeek[], opens, closes}.
+- `contactPoint`: Contato comercial do estabelecimento (telephone, email, url). Nunca dados de pessoa física.
 - `description`: Texto descritivo. Tratado como entrada não confiável pela LLM.
+- `source`: Origem do dado (URL ou texto).
 
 ### WaterQualityObserved
 

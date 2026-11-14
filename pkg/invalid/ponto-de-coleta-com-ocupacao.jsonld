@@ -1,0 +1,40 @@
+{
+  "id": "urn:ngsi-ld:PointOfInterest:coleta-modelo-farol-01",
+  "type": "PointOfInterest",
+  "name": {
+    "type": "Property",
+    "value": "Ponto de coleta Farol 01"
+  },
+  "location": {
+    "type": "GeoProperty",
+    "value": {
+      "type": "Point",
+      "coordinates": [
+        -35.1992,
+        -5.7793
+      ]
+    }
+  },
+  "dataOwner": {
+    "type": "Property",
+    "value": "org-governo-001"
+  },
+  "category": {
+    "type": "Property",
+    "value": [
+      "bathingSamplingPoint"
+    ]
+  },
+  "refBeach": {
+    "type": "Relationship",
+    "object": "urn:ngsi-ld:Beach:praia-modelo-do-farol"
+  },
+  "@context": [
+    "https://example.org/natal/natal-context.jsonld"
+  ],
+  "occupancy": {
+    "type": "Property",
+    "value": 5,
+    "observedAt": "2026-12-20T19:30:00Z"
+  }
+}

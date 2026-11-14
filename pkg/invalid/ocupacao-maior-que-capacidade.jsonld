@@ -1,6 +1,6 @@
 {
-  "id": "urn:ngsi-ld:Restaurant:restaurante-modelo-mare",
-  "type": "Restaurant",
+  "id": "urn:ngsi-ld:PointOfInterest:restaurante-modelo-mare",
+  "type": "PointOfInterest",
   "name": {
     "type": "Property",
     "value": "Restaurante Modelo Maré"
@@ -26,6 +26,12 @@
   "dataOwner": {
     "type": "Property",
     "value": "org-exemplo-002"
+  },
+  "category": {
+    "type": "Property",
+    "value": [
+      "restaurant"
+    ]
   },
   "capacity": {
     "type": "Property",

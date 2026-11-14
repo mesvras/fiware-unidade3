@@ -44,15 +44,6 @@ E("RoomAvailability","Próprio","Disponibilidade agregada de um tipo de quarto e
   A("pricePerNight","P","number","R","EXT","Preço por unidade e noite. Sub-atributo currency obrigatório (ISO 4217).",minimum=0,subattrs={"currency":dict(pattern=r"^[A-Z]{3}$",required=True)}),
   A("minimumStay","P","integer","O","EXT","Mínimo de noites.",minimum=1)],
   rules=["availableUnits <= totalUnits do RoomType referenciado","refHotel de RoomAvailability = refHotel do RoomType referenciado","o id contém hotel, tipo e data de stayDate"])
-E("Restaurant","Próprio (não há modelo oficial)","Restaurante, bar ou similar, com ocupação atual.","urn:ngsi-ld:Restaurant:<slug>",[
-  NAME("Nome do estabelecimento."), LOC(), ADDR(), OWNER,
-  A("capacity","P","integer","R","SDM","Lugares totais.",minimum=1),
-  A("occupancy","P","integer","R","SDM","Lugares ocupados agora. Exige observedAt no atributo.",minimum=0,observed_at=True),
-  A("availabilityLevel","P","enum","O","EXT","Derivado de occupancy/capacity (limiares configuráveis na API).",enum=["available","limited","full"]),
-  A("cuisine","P","array","O","EXT","Tipos de cozinha (texto livre).",items="string"),
-  A("priceRange","P","string","O","SDM","Faixa de preço, de $ a $$$$.",pattern=r"^\${1,4}$"),
-  OPEN, CONTACT, DESC, SRC],
-  rules=["occupancy <= capacity","availabilityLevel coerente com a razão occupancy/capacity (limiares a definir na API)"])
 E("Event","SDM dataModel.TourismDestinations/Event (perfil + extensões)","Evento de qualquer porte, de apresentação em bar a congresso. Também representa restrição de banho (category bathingRestriction).","urn:ngsi-ld:Event:<slug>",[
   NAME("Nome do evento."), 
   A("startDate","P","datetime","R","SDM","Início (DateTime, UTC)."),
@@ -81,11 +72,19 @@ E("Beach","SDM dataModel.PointOfInterest/Beach (perfil + extensão)","Praia. Pon
   A("occupationRate","P","enum","O","SDM","Lotação típica.",enum=["high","medium","low","none"]),
   REF("refWeatherStation","PointOfInterest (category weatherStation)","R","Estação cujas chuvas valem para esta praia (extensão do projeto)."),
   ADDR("O"), DESC, SRC])
-E("PointOfInterest","SDM dataModel.PointOfInterest/PointOfInterest (perfil)","Ponto de coleta de balneabilidade ou estação meteorológica, conforme category.","urn:ngsi-ld:PointOfInterest:<slug>",[
+FOOD = "category contém restaurant ou bar"
+E("PointOfInterest","SDM dataModel.PointOfInterest/PointOfInterest (perfil + extensões)","Ponto de coleta de balneabilidade, estação meteorológica, restaurante ou bar, conforme category. Restaurante e bar guardam ocupação atual.","urn:ngsi-ld:PointOfInterest:<slug>",[
   NAME("Nome do ponto."), LOC(), OWNER,
-  A("category","P","arrayenum","R","SDM","Função do ponto (extensão de valores do projeto).",enum=["bathingSamplingPoint","weatherStation"],minItems=1),
-  REF("refBeach","Beach","C:R se category contém bathingSamplingPoint","Praia a que o ponto de coleta pertence."), DESC],
-  rules=["bathingSamplingPoint => refBeach presente"])
+  A("category","P","arrayenum","R","SDM","Função do ponto (extensão de valores do projeto).",enum=["bathingSamplingPoint","weatherStation","restaurant","bar"],minItems=1),
+  REF("refBeach","Beach","C:R se category contém bathingSamplingPoint","Praia a que o ponto de coleta pertence."),
+  ADDR("C:R se "+FOOD),
+  A("capacity","P","integer","C:R se "+FOOD,"SDM","Lugares totais.",minimum=1),
+  A("occupancy","P","integer","C:R se "+FOOD,"SDM","Lugares ocupados agora. Exige observedAt no atributo.",minimum=0,observed_at=True),
+  A("availabilityLevel","P","enum","O","EXT","Só para restaurante e bar. Derivado de occupancy/capacity (limiares configuráveis na API).",enum=["available","limited","full"]),
+  A("cuisine","P","array","O","EXT","Só para restaurante e bar. Tipos de cozinha (texto livre).",items="string"),
+  A("priceRange","P","string","O","SDM","Só para restaurante e bar. Faixa de preço, de $ a $$$$.",pattern=r"^\${1,4}$"),
+  OPEN, CONTACT, DESC, SRC],
+  rules=["bathingSamplingPoint => refBeach presente","restaurant ou bar => address, capacity e occupancy presentes","occupancy <= capacity","capacity, occupancy, availabilityLevel, cuisine, priceRange e openingHoursSpecification só em restaurant ou bar","availabilityLevel coerente com a razão occupancy/capacity (limiares a definir na API)"])
 E("WaterQualityObserved","SDM dataModel.WaterQuality/WaterQualityObserved (perfil)","Medição de uma sonda em um ponto de coleta. Estimativa, não laudo.","urn:ngsi-ld:WaterQualityObserved:<ponto>:<AAAAMMDDTHHMMSSZ>",[
   A("dateObserved","P","datetime","R","SDM","Instante da medição (DateTime, UTC)."), LOC(),
   REF("refPointOfInterest","PointOfInterest (bathingSamplingPoint)","R","Ponto de coleta."), OWNER,
@@ -125,4 +124,4 @@ E("BathingStatus","Próprio","Estado de banho consolidado de uma praia; uma enti
   A("rainfall72h","P","number","O","EXT","Chuva acumulada em 72 h, mm.",minimum=0)],
   rules=["basis = none => status = indeterminate","basis = report => status igual ao result do laudo (proper ou improper)","basis = estimate => status diferente de proper sem laudo vigente é decisão da TASK-10"])
 
-CUSTOM_TYPES = ["Hotel","RoomType","RoomAvailability","Restaurant","BathingReport","BathingStatus"]
+CUSTOM_TYPES = ["Hotel","RoomType","RoomAvailability","BathingReport","BathingStatus"]

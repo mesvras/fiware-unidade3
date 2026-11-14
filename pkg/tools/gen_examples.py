@@ -33,9 +33,9 @@ def avail(rt,slug,date,units,price,minstay=None):
 avail(RT1,"standard","2026-12-20",6,420.0)
 avail(RT1,"standard","2026-12-21",0,420.0)
 avail(RT2,"familia","2026-12-20",3,690.0,minstay=2)
-REST="urn:ngsi-ld:Restaurant:restaurante-modelo-maré".replace("é","e")
-put(ent(REST,"Restaurant", name=P("Restaurante Modelo Maré"), location=GEO(-35.2062,-5.8688), address=addr("Avenida Exemplo, 250"),
-  dataOwner=P("org-exemplo-002"), capacity=P(80), occupancy={"type":"Property","value":52,"observedAt":"2026-12-20T19:30:00Z"},
+REST="urn:ngsi-ld:PointOfInterest:restaurante-modelo-mare"
+put(ent(REST,"PointOfInterest", name=P("Restaurante Modelo Maré"), location=GEO(-35.2062,-5.8688), address=addr("Avenida Exemplo, 250"),
+  dataOwner=P("org-exemplo-002"), category=P(["restaurant"]), capacity=P(80), occupancy={"type":"Property","value":52,"observedAt":"2026-12-20T19:30:00Z"},
   availabilityLevel=P("limited"), cuisine=P(["regional","frutos do mar"]), priceRange=P("$$"),
   openingHoursSpecification=P([{"dayOfWeek":["Friday","Saturday"],"opens":"11:00","closes":"23:30"}]),
   contactPoint=P({"telephone":"+55 84 0000-0001"}), description=P("Restaurante fictício para testes.")))

@@ -68,14 +68,13 @@ O APISIX autoriza por papel, rota e verbo. O dono do registro é validado pela A
 
 ## Modelos de dados
 
-Onze tipos de entidade NGSI-LD: cinco do Smart Data Models (com perfil e extensões) e seis próprios.
+Dez tipos de entidade NGSI-LD: cinco do Smart Data Models (com perfil e extensões) e cinco próprios. Restaurantes e bares são `PointOfInterest` com `category` `restaurant` ou `bar`.
 
 ```
 Origem          Modelos
 --------------  ---------------------------------------------------------------------
 SDM             Beach, PointOfInterest, WaterQualityObserved, WeatherObserved, Event
-Customizados    Hotel, RoomType, RoomAvailability, Restaurant, BathingReport,
-                BathingStatus
+Customizados    Hotel, RoomType, RoomAvailability, BathingReport, BathingStatus
 ```
 
 Detalhes, atributos e relacionamentos em [`docs/modelos.md`](docs/modelos.md). O contexto, os schemas e os exemplos ficam em [`models/`](models/).

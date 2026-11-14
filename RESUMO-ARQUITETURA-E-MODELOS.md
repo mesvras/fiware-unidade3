@@ -107,14 +107,15 @@ Serviço de roteiros  próprio                    chat do turista e chamada à L
 
 ## 4. Modelos de dados escolhidos
 
-Onze tipos NGSI-LD: cinco do Smart Data Models (SDM), com perfil e extensões, e seis customizados. Não existe modelo oficial de hotel, restaurante nem de estado de banho.
+Dez tipos NGSI-LD: cinco do Smart Data Models (SDM), com perfil e extensões, e cinco customizados. Não existe modelo oficial de hotel nem de estado de banho. Restaurante e bar usam o PointOfInterest do SDM.
 
 ```
 Modelo                Fonte                                             Extensões do projeto
 --------------------  ------------------------------------------------  ------------------------------------------
 Beach                 SDM PointOfInterest/Beach                         refWeatherStation, dataOwner
-PointOfInterest       SDM PointOfInterest/PointOfInterest               category bathingSamplingPoint e weatherStation,
-                                                                        refBeach, dataOwner
+PointOfInterest       SDM PointOfInterest/PointOfInterest               category bathingSamplingPoint, weatherStation,
+                                                                        restaurant e bar; refBeach, availabilityLevel,
+                                                                        cuisine, dataOwner
 WaterQualityObserved  SDM WaterQuality/WaterQualityObserved             dataOwner; turbidity e salinity obrigatórias
 WeatherObserved       SDM Weather/WeatherObserved                       precipitationIntervalMinutes, dataOwner
 Event                 SDM TourismDestinations/Event                     eventScale, venueName, bathingRestriction,
@@ -122,7 +123,6 @@ Event                 SDM TourismDestinations/Event                     eventSca
 Hotel                 Customizado                                       —
 RoomType              Customizado                                       —
 RoomAvailability      Customizado                                       —
-Restaurant            Customizado (termos de PointOfInterest do SDM)    —
 BathingReport         Customizado                                       —
 BathingStatus         Customizado                                       —
 ```

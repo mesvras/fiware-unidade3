@@ -161,10 +161,22 @@
       "regra: basis=estimate exige estimatedRiskLevel"
     ]
   },
+  "restaurante-sem-capacidade": {
+    "deve_falhar_com": "capacity",
+    "erros_obtidos": [
+      "regra: restaurante ou bar exige capacity"
+    ]
+  },
+  "ponto-de-coleta-com-ocupacao": {
+    "deve_falhar_com": "occupancy",
+    "erros_obtidos": [
+      "regra: occupancy só vale para restaurante ou bar"
+    ]
+  },
   "id-com-prefixo-errado": {
     "deve_falhar_com": "schema",
     "erros_obtidos": [
-      "schema: id: 'urn:ngsi-ld:Restaurant:x' does not match '^urn:ngsi-ld:Hotel:[A-Za-z0-9._:-]+$'"
+      "schema: id: 'urn:ngsi-ld:RoomType:x' does not match '^urn:ngsi-ld:Hotel:[A-Za-z0-9._:-]+$'"
     ]
   }
 }

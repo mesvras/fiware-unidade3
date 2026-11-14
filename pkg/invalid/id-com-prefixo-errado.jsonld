@@ -1,5 +1,5 @@
 {
-  "id": "urn:ngsi-ld:Restaurant:x",
+  "id": "urn:ngsi-ld:RoomType:x",
   "type": "Hotel",
   "name": {
     "type": "Property",
