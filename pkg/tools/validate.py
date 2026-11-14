@@ -169,6 +169,7 @@ def mutate(ents):
     case("preco-sem-currency", "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220", lambda e: e["pricePerNight"].pop("currency") and None, "currency")
     case("disponibilidade-maior-que-total", "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220", lambda e: e["availableUnits"].update(value=99), "totalUnits")
     case("data-do-id-diferente", "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220", lambda e: e["stayDate"]["value"].update({"@value":"2026-12-25"}), "stayDate")
+    case("data-com-fracao-de-segundo", "urn:ngsi-ld:Event:show-bar-modelo-20261220", lambda e: e["startDate"]["value"].update({"@value":"2026-12-20T22:00:00.500Z"}), "startDate")
     case("data-sem-tipo", "urn:ngsi-ld:RoomAvailability:hotel-modelo-farol:standard:20261220", lambda e: e["stayDate"].update(value="2026-12-20"), "schema")
     case("ocupacao-sem-observedAt", "urn:ngsi-ld:PointOfInterest:restaurante-modelo-mare", lambda e: e["occupancy"].pop("observedAt") and None, "observedAt")
     case("ocupacao-maior-que-capacidade", "urn:ngsi-ld:PointOfInterest:restaurante-modelo-mare", lambda e: e["occupancy"].update(value=200), "occupancy")

@@ -3,6 +3,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from spec import *
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DT = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$"
+DT_VALUE = r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$"
 D  = r"^\d{4}-\d{2}-\d{2}$"
 KNOWN = list(ENTITIES)
 
@@ -27,7 +28,7 @@ def vschema(a):
         for k in ("minItems","maxItems"):
             if k in a: s[k] = a[k]
     elif t == "array": s = {"type":"array","items":{"type":a.get("items","string")}}
-    elif t == "datetime": s = typed("DateTime", DT)
+    elif t == "datetime": s = typed("DateTime", DT_VALUE)
     elif t == "date": s = typed("Date", D)
     elif t == "point":
         s = {"type":"object","required":["type","coordinates"],"additionalProperties":False,
