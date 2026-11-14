@@ -39,11 +39,6 @@ def iso_date(value: str, field: str) -> str:
         raise ApiError(400, f"{field}: esperado AAAA-MM-DD")
 
 
-async def ensure_empty(orion: Orion, type_: str, attr: str, target: str, message: str) -> None:
-    if await orion.query({"type": type_, "q": query.eq(attr, target), "limit": 1}):
-        raise ApiError(409, message)
-
-
 def show_room(e: dict, hotel_id: str, fmt: str) -> dict:
     return service.present(e, fmt, prefix=f"{hotel_id}:", drop=("refHotel",))
 
@@ -84,7 +79,7 @@ async def update_hotel(hotel_id: str, request: Request, orion: Orion = Depends(g
 @router.delete("/{hotel_id}", status_code=204)
 async def delete_hotel(hotel_id: str, orion: Orion = Depends(get_orion)):
     current = await service.read(orion, HOTEL, hotel_id, "hotel")
-    await ensure_empty(orion, ROOM, "refHotel", current["id"], "remova antes os tipos de quarto do hotel")
+    await service.ensure_unreferenced(orion, current, ((ROOM, "refHotel"),), "hotel")
     await service.remove(orion, current)
 
 
@@ -129,7 +124,7 @@ async def update_room_type(hotel_id: str, room_id: str, request: Request, orion:
 @router.delete("/{hotel_id}/room-types/{room_id}", status_code=204)
 async def delete_room_type(hotel_id: str, room_id: str, orion: Orion = Depends(get_orion)):
     current = await service.read(orion, ROOM, f"{hotel_id}:{room_id}", "tipo de quarto")
-    await ensure_empty(orion, AVAIL, "refRoomType", current["id"], "remova antes a disponibilidade deste tipo de quarto")
+    await service.ensure_unreferenced(orion, current, ((AVAIL, "refRoomType"),), "tipo de quarto")
     await service.remove(orion, current)
 
 

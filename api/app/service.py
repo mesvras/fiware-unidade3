@@ -1,3 +1,4 @@
+import json
 from collections.abc import Callable
 
 from fastapi import Request
@@ -52,6 +53,12 @@ async def update(orion: Orion, current: dict, body: dict, frozen: tuple[str, ...
     if changes:
         await orion.update(current["id"], changes)
     return merged
+
+
+async def ensure_unreferenced(orion: Orion, entity: dict, refs: tuple[tuple[str, str], ...], what: str) -> None:
+    for type_, attr in refs:
+        if await orion.query({"type": type_, "q": f"{attr}=={json.dumps(entity['id'])}", "limit": 1}):
+            raise ApiError(409, f"{what} ainda é referenciado por {type_}.{attr}")
 
 
 async def remove(orion: Orion, entity: dict) -> None:
