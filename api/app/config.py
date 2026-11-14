@@ -8,6 +8,7 @@ class Settings:
     context_url: str = os.environ.get("CONTEXT_URL", "http://context/natal-context.jsonld")
     tenant: str = os.environ.get("NGSILD_TENANT", "")
     timeout: float = float(os.environ.get("ORION_TIMEOUT", "10"))
+    dev_owner: str = os.environ.get("DEV_OWNER", "dev-owner")
     auth_enabled: bool = os.environ.get("AUTH_ENABLED", "false").lower() == "true"
 
 

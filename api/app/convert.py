@@ -26,6 +26,11 @@ def targets(attr: dict) -> list[str]:
     return [n for n in ENTITIES if re.search(rf"\b{n}\b", attr["target"])]
 
 
+def value(entity: dict, attr: str):
+    v = entity.get(attr, {}).get("value")
+    return v["@value"] if isinstance(v, dict) and "@value" in v else v
+
+
 def now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
