@@ -3,6 +3,7 @@ from collections.abc import Callable
 
 from fastapi import Request
 
+from .auth import Principal, ensure_owner
 from .convert import from_ngsi, to_ngsi, urn
 from .errors import ApiError, not_found
 from .orion import Orion
@@ -41,7 +42,8 @@ async def read(orion: Orion, type_: str, slug: str, what: str, match: Callable[[
     return entity
 
 
-async def update(orion: Orion, current: dict, body: dict, frozen: tuple[str, ...] = (), derive: Derive | None = None) -> dict:
+async def update(orion: Orion, current: dict, principal: Principal, body: dict, frozen: tuple[str, ...] = (), derive: Derive | None = None) -> dict:
+    ensure_owner(current, principal)
     blocked = sorted(k for k in body if k in frozen)
     if blocked:
         raise ApiError(400, *(f"{k}: não pode ser alterado" for k in blocked))
@@ -61,7 +63,8 @@ async def ensure_unreferenced(orion: Orion, entity: dict, refs: tuple[tuple[str,
             raise ApiError(409, f"{what} ainda é referenciado por {type_}.{attr}")
 
 
-async def remove(orion: Orion, entity: dict) -> None:
+async def remove(orion: Orion, principal: Principal, entity: dict) -> None:
+    ensure_owner(entity, principal)
     await orion.delete(entity["id"])
 
 

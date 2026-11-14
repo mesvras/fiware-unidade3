@@ -152,6 +152,51 @@ services:
       retries: 6
       start_period: 10s
 
+  test-idp:
+    profiles: [test]
+    build:
+      context: ..
+      dockerfile: api/Dockerfile
+      target: test
+    image: natal-api-tests:dev
+    networks: [internal]
+    command: ["python", "-m", "tests.idp"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=3)"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+
+  api-auth:
+    profiles: [test]
+    build:
+      context: ..
+      dockerfile: api/Dockerfile
+      target: runtime
+    image: natal-api:dev
+    networks: [internal]
+    depends_on:
+      orion:
+        condition: service_healthy
+      context:
+        condition: service_healthy
+      test-idp:
+        condition: service_healthy
+    environment:
+      ORION_URL: http://orion:1026
+      CONTEXT_URL: http://context/natal-context.jsonld
+      AUTH_ENABLED: "true"
+      OIDC_ISSUER: http://test-idp/realms/natal
+      OIDC_AUDIENCE: natal-api
+      OIDC_JWKS_URL: http://test-idp:8080/jwks.json
+      JWKS_MIN_REFRESH_SECONDS: "1"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).status == 200 else 1)"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 10s
+
   api-tests:
     profiles: [test]
     build:
@@ -163,8 +208,14 @@ services:
     depends_on:
       api:
         condition: service_healthy
+      api-auth:
+        condition: service_healthy
+      test-idp:
+        condition: service_healthy
     environment:
       API_URL: http://api:8000
+      API_AUTH_URL: http://api-auth:8000
+      IDP_URL: http://test-idp:8080
 
 networks:
   internal:

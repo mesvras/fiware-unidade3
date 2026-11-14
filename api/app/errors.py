@@ -7,9 +7,10 @@ from .validation import ValidationFailed
 
 
 class ApiError(Exception):
-    def __init__(self, status: int, *errors: str):
+    def __init__(self, status: int, *errors: str, headers: dict | None = None):
         self.status = status
         self.errors = list(errors)
+        self.headers = headers
 
 
 def not_found(what: str) -> ApiError:
@@ -19,7 +20,7 @@ def not_found(what: str) -> ApiError:
 def register(app: FastAPI) -> None:
     @app.exception_handler(ApiError)
     async def api_error(_: Request, e: ApiError):
-        return JSONResponse(status_code=e.status, content={"errors": e.errors})
+        return JSONResponse(status_code=e.status, content={"errors": e.errors}, headers=e.headers)
 
     @app.exception_handler(ConversionError)
     @app.exception_handler(ValidationFailed)

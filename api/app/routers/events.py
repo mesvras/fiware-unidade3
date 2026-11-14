@@ -6,7 +6,8 @@ from fastapi import APIRouter, Depends, Query, Request, Response
 
 from .. import query, service
 from ..convert import urn, value
-from ..deps import current_owner, get_orion
+from ..auth import Principal
+from ..deps import current_principal, get_orion
 from ..errors import ApiError
 from ..openapi import body_schema
 from ..orion import Orion
@@ -66,12 +67,12 @@ async def read(orion: Orion, event_id: str) -> dict:
 
 
 @router.post("", status_code=201, openapi_extra=body_schema(EVENT, exclude=("refPointOfInterest",), extra=PLACE_FIELD))
-async def create_event(request: Request, response: Response, orion: Orion = Depends(get_orion), owner: str = Depends(current_owner)):
+async def create_event(request: Request, response: Response, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     body = await service.json_body(request)
     if not isinstance(body.get("id"), str) or not SHORT_ID.match(body["id"]):
         raise ApiError(400, "id: use letras, números, ponto, hífen ou sublinhado")
     reject_restriction(body)
-    entity = await service.create(orion, EVENT, await resolve_place(orion, body), owner)
+    entity = await service.create(orion, EVENT, await resolve_place(orion, body), principal.owner)
     response.headers["Location"] = f"/v1/events/{body['id']}"
     return service.present(entity, "simple")
 
@@ -107,13 +108,13 @@ async def get_event(event_id: str, format: Format = "simple", orion: Orion = Dep
 
 
 @router.patch("/{event_id}", openapi_extra=body_schema(EVENT, exclude=("refPointOfInterest",), extra=PLACE_FIELD, partial=True, with_id=False))
-async def update_event(event_id: str, request: Request, orion: Orion = Depends(get_orion)):
+async def update_event(event_id: str, request: Request, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     current = await read(orion, event_id)
     body = await service.json_body(request)
     reject_restriction(body)
-    return service.present(await service.update(orion, current, await resolve_place(orion, body)), "simple")
+    return service.present(await service.update(orion, current, principal, await resolve_place(orion, body)), "simple")
 
 
 @router.delete("/{event_id}", status_code=204)
-async def delete_event(event_id: str, orion: Orion = Depends(get_orion)):
-    await service.remove(orion, await read(orion, event_id))
+async def delete_event(event_id: str, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
+    await service.remove(orion, principal, await read(orion, event_id))

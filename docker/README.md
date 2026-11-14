@@ -20,7 +20,51 @@ docker compose exec orion curl -s http://localhost:1026/ngsi-ld/ex/v1/version
 
 O serviço `api` é construído a partir de `api/Dockerfile`, com o repositório como contexto de build, porque a imagem inclui `pkg/` (schemas e `spec.py`). A API roda sem root, na porta 8000, só na rede interna. A variável `API_TENANT` define o tenant NGSI-LD; vazia, usa o tenant padrão.
 
-Os testes rodam em um container na mesma rede, no perfil `test`:
+### Autenticação e autorização
+
+A API valida JWT emitidos pelo provedor OIDC (Keycloak, na TASK-16), seguindo o JWT Cheat Sheet e o API Security Top 10 da OWASP:
+
+- token só no cabeçalho `Authorization: Bearer`; assinatura validada com as chaves do JWKS configurado; os cabeçalhos `jku`, `x5u` e `jwk` do token são ignorados;
+- só algoritmos assimétricos (`OIDC_ALGORITHMS`, padrão `RS256`); `none` e `HS*` são recusados, inclusive na configuração;
+- `exp`, `iat`, `iss`, `aud` e `sub` obrigatórios, com tolerância de relógio de 30 s; tamanho máximo de 8 KB;
+- cache do JWKS com nova busca limitada quando chega um `kid` desconhecido (rotação de chaves);
+- todas as rotas exigem token, exceto `/health`; `/docs` e `/openapi.json` ficam fechados;
+- escrita exige o papel do recurso (`realm_access.roles`); alteração e remoção exigem que o dono do token seja o `dataOwner` do registro; criar tipo de quarto ou disponibilidade exige ser dono do hotel;
+- o `dataOwner` vem da claim `owner_id` (`OWNER_CLAIM`), ou de `sub` se ela faltar; o valor enviado pelo cliente é ignorado;
+- 401 genérico com `WWW-Authenticate: Bearer`; 403 para papel ou dono errado; o motivo vai para o log, nunca o token; o log de acesso não grava query strings.
+
+Matriz provisória de papéis (revisão na TASK-15):
+
+```
+Papel               Escreve em
+------------------  ---------------------------------------------------
+hotelaria           /v1/hotels (e tipos de quarto e disponibilidade)
+bares-restaurantes  /v1/restaurants, /v1/bars
+produtor-cultural   /v1/events
+gestor-governo      /v1/beaches, /v1/sampling-points, /v1/weather-stations
+```
+
+Qualquer usuário autenticado lê.
+
+```
+Variável                  Padrão     Uso
+------------------------  ---------  ------------------------------------------
+AUTH_ENABLED              true       false só em desenvolvimento; registra aviso
+OIDC_ISSUER               —          iss esperado (obrigatório)
+OIDC_AUDIENCE             —          aud esperada (obrigatória)
+OIDC_JWKS_URL             —          endereço do JWKS (obrigatório)
+OIDC_ALGORITHMS           RS256      lista de algoritmos assimétricos
+OWNER_CLAIM               owner_id   claim com o identificador do dono
+JWT_CLOCK_SKEW_SECONDS    30         tolerância de relógio, de 0 a 120
+JWKS_CACHE_SECONDS        300        validade do cache do JWKS
+JWKS_MIN_REFRESH_SECONDS  30         intervalo mínimo entre buscas por kid novo
+```
+
+Com `AUTH_ENABLED=true`, a API não inicia se faltar emissor, audiência ou JWKS, ou se houver algoritmo inseguro. O serviço `api` do Compose usa `AUTH_ENABLED=false` até o Keycloak existir.
+
+### Testes
+
+Os testes rodam em um container na mesma rede, no perfil `test`. O perfil também sobe `test-idp`, que gera chaves RSA em memória, publica o JWKS e emite tokens, e `api-auth`, uma segunda instância da API com a autenticação ligada:
 
 ```bash
 docker compose --profile test run --rm --build api-tests

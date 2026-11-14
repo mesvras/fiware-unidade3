@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, Query, Request, Response
 
 from .. import query, service
 from ..convert import urn, value
-from ..deps import current_owner, get_orion
+from ..auth import Principal
+from ..deps import current_principal, get_orion
 from ..errors import ApiError
 from ..openapi import body_schema
 from ..orion import Orion
@@ -33,12 +34,12 @@ def make_router(prefix: str, category: str, tag: str, label: str, with_beach: bo
         return await service.read(orion, POI, item_id, label, match=is_category)
 
     @router.post("", status_code=201, openapi_extra=body_schema(POI, exclude=exclude))
-    async def create(request: Request, response: Response, orion: Orion = Depends(get_orion), owner: str = Depends(current_owner)):
+    async def create(request: Request, response: Response, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
         body = await service.json_body(request)
         reject(body)
         if not isinstance(body.get("id"), str) or not SHORT_ID.match(body["id"]):
             raise ApiError(400, "id: use letras, números, ponto, hífen ou sublinhado")
-        entity = await service.create(orion, POI, body, owner, {"category": [category]})
+        entity = await service.create(orion, POI, body, principal.owner, {"category": [category]})
         response.headers["Location"] = f"{prefix}/{body['id']}"
         return service.present(entity, "simple")
 
@@ -57,17 +58,17 @@ def make_router(prefix: str, category: str, tag: str, label: str, with_beach: bo
         return service.present(await read(orion, item_id), format)
 
     @router.patch("/{item_id}", openapi_extra=body_schema(POI, exclude=exclude, partial=True, with_id=False))
-    async def update_item(item_id: str, request: Request, orion: Orion = Depends(get_orion)):
+    async def update_item(item_id: str, request: Request, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
         current = await read(orion, item_id)
         body = await service.json_body(request)
         reject(body)
-        return service.present(await service.update(orion, current, body), "simple")
+        return service.present(await service.update(orion, current, principal, body), "simple")
 
     @router.delete("/{item_id}", status_code=204)
-    async def delete_item(item_id: str, orion: Orion = Depends(get_orion)):
+    async def delete_item(item_id: str, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
         current = await read(orion, item_id)
         await service.ensure_unreferenced(orion, current, refs, label)
-        await service.remove(orion, current)
+        await service.remove(orion, principal, current)
 
     return router
 

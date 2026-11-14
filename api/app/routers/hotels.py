@@ -6,7 +6,8 @@ from fastapi import APIRouter, Depends, Query, Request, Response
 
 from .. import query, service
 from ..convert import urn
-from ..deps import current_owner, get_orion
+from ..auth import Principal, ensure_owner
+from ..deps import current_principal, get_orion
 from ..errors import ApiError
 from ..openapi import body_schema
 from ..orion import Orion
@@ -48,10 +49,10 @@ def show_avail(e: dict, hotel_id: str, fmt: str) -> dict:
 
 
 @router.post("", status_code=201, openapi_extra=body_schema(HOTEL))
-async def create_hotel(request: Request, response: Response, orion: Orion = Depends(get_orion), owner: str = Depends(current_owner)):
+async def create_hotel(request: Request, response: Response, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     body = await service.json_body(request)
     short_id(body.get("id"))
-    entity = await service.create(orion, HOTEL, body, owner)
+    entity = await service.create(orion, HOTEL, body, principal.owner)
     response.headers["Location"] = f"/v1/hotels/{body['id']}"
     return service.present(entity, "simple")
 
@@ -71,27 +72,27 @@ async def get_hotel(hotel_id: str, format: Format = "simple", orion: Orion = Dep
 
 
 @router.patch("/{hotel_id}", openapi_extra=body_schema(HOTEL, partial=True, with_id=False))
-async def update_hotel(hotel_id: str, request: Request, orion: Orion = Depends(get_orion)):
+async def update_hotel(hotel_id: str, request: Request, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     current = await service.read(orion, HOTEL, hotel_id, "hotel")
-    return service.present(await service.update(orion, current, await service.json_body(request)), "simple")
+    return service.present(await service.update(orion, current, principal, await service.json_body(request)), "simple")
 
 
 @router.delete("/{hotel_id}", status_code=204)
-async def delete_hotel(hotel_id: str, orion: Orion = Depends(get_orion)):
+async def delete_hotel(hotel_id: str, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     current = await service.read(orion, HOTEL, hotel_id, "hotel")
     await service.ensure_unreferenced(orion, current, ((ROOM, "refHotel"),), "hotel")
-    await service.remove(orion, current)
+    await service.remove(orion, principal, current)
 
 
 @router.post("/{hotel_id}/room-types", status_code=201, openapi_extra=body_schema(ROOM, exclude=("refHotel",)))
 async def create_room_type(hotel_id: str, request: Request, response: Response, orion: Orion = Depends(get_orion),
-                           owner: str = Depends(current_owner)):
-    await service.read(orion, HOTEL, hotel_id, "hotel")
+                           principal: Principal = Depends(current_principal)):
+    ensure_owner(await service.read(orion, HOTEL, hotel_id, "hotel"), principal)
     body = await service.json_body(request)
     if "refHotel" in body:
         raise ApiError(400, "refHotel: definido pela URL")
     room_id = short_id(body.get("id"))
-    entity = await service.create(orion, ROOM, {**body, "id": f"{hotel_id}:{room_id}"}, owner, {"refHotel": hotel_id})
+    entity = await service.create(orion, ROOM, {**body, "id": f"{hotel_id}:{room_id}"}, principal.owner, {"refHotel": hotel_id})
     response.headers["Location"] = f"/v1/hotels/{hotel_id}/room-types/{room_id}"
     return show_room(entity, hotel_id, "simple")
 
@@ -115,24 +116,24 @@ async def get_room_type(hotel_id: str, room_id: str, format: Format = "simple", 
 
 
 @router.patch("/{hotel_id}/room-types/{room_id}", openapi_extra=body_schema(ROOM, exclude=("refHotel",), partial=True, with_id=False))
-async def update_room_type(hotel_id: str, room_id: str, request: Request, orion: Orion = Depends(get_orion)):
+async def update_room_type(hotel_id: str, room_id: str, request: Request, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     current = await service.read(orion, ROOM, f"{hotel_id}:{room_id}", "tipo de quarto")
-    updated = await service.update(orion, current, await service.json_body(request), frozen=("refHotel",))
+    updated = await service.update(orion, current, principal, await service.json_body(request), frozen=("refHotel",))
     return show_room(updated, hotel_id, "simple")
 
 
 @router.delete("/{hotel_id}/room-types/{room_id}", status_code=204)
-async def delete_room_type(hotel_id: str, room_id: str, orion: Orion = Depends(get_orion)):
+async def delete_room_type(hotel_id: str, room_id: str, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     current = await service.read(orion, ROOM, f"{hotel_id}:{room_id}", "tipo de quarto")
     await service.ensure_unreferenced(orion, current, ((AVAIL, "refRoomType"),), "tipo de quarto")
-    await service.remove(orion, current)
+    await service.remove(orion, principal, current)
 
 
 @router.post("/{hotel_id}/availability", status_code=201,
              openapi_extra=body_schema(AVAIL, exclude=("refHotel", "refRoomType"), extra=ROOM_TYPE_FIELD, with_id=False))
 async def create_availability(hotel_id: str, request: Request, response: Response, orion: Orion = Depends(get_orion),
-                              owner: str = Depends(current_owner)):
-    await service.read(orion, HOTEL, hotel_id, "hotel")
+                              principal: Principal = Depends(current_principal)):
+    ensure_owner(await service.read(orion, HOTEL, hotel_id, "hotel"), principal)
     body = await service.json_body(request)
     for field in ("id", "refHotel", "refRoomType"):
         if field in body:
@@ -141,7 +142,7 @@ async def create_availability(hotel_id: str, request: Request, response: Respons
     await service.read(orion, ROOM, f"{hotel_id}:{room_id}", "tipo de quarto")
     day = compact_date(body.get("stayDate"))
     fixed = {"id": f"{hotel_id}:{room_id}:{day}", "refHotel": hotel_id, "refRoomType": f"{hotel_id}:{room_id}"}
-    entity = await service.create(orion, AVAIL, body, owner, fixed)
+    entity = await service.create(orion, AVAIL, body, principal.owner, fixed)
     response.headers["Location"] = f"/v1/hotels/{hotel_id}/availability/{room_id}/{body['stayDate']}"
     return show_avail(entity, hotel_id, "simple")
 
@@ -167,13 +168,13 @@ async def get_availability(hotel_id: str, room_id: str, stay_date: str, format: 
 
 @router.patch("/{hotel_id}/availability/{room_id}/{stay_date}",
               openapi_extra=body_schema(AVAIL, exclude=("refHotel", "refRoomType", "stayDate"), partial=True, with_id=False))
-async def update_availability(hotel_id: str, room_id: str, stay_date: str, request: Request, orion: Orion = Depends(get_orion)):
+async def update_availability(hotel_id: str, room_id: str, stay_date: str, request: Request, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     current = await service.read(orion, AVAIL, f"{hotel_id}:{room_id}:{compact_date(stay_date)}", "disponibilidade")
-    updated = await service.update(orion, current, await service.json_body(request), frozen=("refHotel", "refRoomType", "stayDate", "roomType"))
+    updated = await service.update(orion, current, principal, await service.json_body(request), frozen=("refHotel", "refRoomType", "stayDate", "roomType"))
     return show_avail(updated, hotel_id, "simple")
 
 
 @router.delete("/{hotel_id}/availability/{room_id}/{stay_date}", status_code=204)
-async def delete_availability(hotel_id: str, room_id: str, stay_date: str, orion: Orion = Depends(get_orion)):
+async def delete_availability(hotel_id: str, room_id: str, stay_date: str, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
     current = await service.read(orion, AVAIL, f"{hotel_id}:{room_id}:{compact_date(stay_date)}", "disponibilidade")
-    await service.remove(orion, current)
+    await service.remove(orion, principal, current)
