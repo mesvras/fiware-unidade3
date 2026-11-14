@@ -37,7 +37,7 @@ O script usa o tenant `smoketest` e remove tudo o que cria. Ele verifica:
 - todos os serviços `healthy` e nenhuma porta publicada;
 - uma medição MQTT passa pela IoT Agent e chega ao Orion-LD;
 - uma assinatura leva o histórico do Orion-LD ao QuantumLeap e ao CrateDB;
-- os 17 exemplos de `pkg/` entram por upsert em lote, voltam idênticos na leitura e respondem às consultas por categoria, relacionamento, distância e janela de datas.
+- os 17 exemplos de `pkg/` entram por upsert em lote, voltam equivalentes na leitura e respondem às consultas por categoria, relacionamento, distância e janela de datas.
 
 ## Servidor de contextos
 
@@ -85,3 +85,5 @@ O CrateDB exige `vm.max_map_count` de pelo menos 262144 no host (`sysctl vm.max_
 - **Consulta por data no Orion-LD.** O Orion-LD 1.12 guarda um valor `{"@type": "DateTime", "@value": "..."}` como objeto e não compara datas como datas. Use `q=startDate[@value]>="2026-12-20T00:00:00Z"`, com a data entre aspas. A comparação é de texto e só respeita a ordem do tempo porque todas as datas estão em UTC, no mesmo formato.
 - **`GET /ngsi-ld/v1/types` trava com tenant vazio.** No Orion-LD 1.12 com `-mongocOnly`, a rota não responde quando o tenant existe mas não tem entidades, inclusive no tenant padrão. Com entidades, ela responde normalmente. Evite essa rota ou use limite de tempo.
 - **Não apague o banco de um tenant com o Orion-LD rodando.** O Orion-LD guarda em memória que o tenant existe e não recria os índices, entre eles o geográfico. As consultas por distância passam a falhar. Para limpar, remova as entidades pela API ou reinicie o Orion-LD depois.
+- **Listas de um elemento.** O Orion-LD grava e devolve uma lista de um elemento como valor simples: `["restaurant"]` volta como `"restaurant"`. A API devolve esses atributos como lista de novo, de acordo com o `spec.py`.
+- **`observedAt` com milissegundos.** O Orion-LD devolve `2026-12-20T22:00:00Z` como `2026-12-20T22:00:00.000Z`. É o mesmo instante.

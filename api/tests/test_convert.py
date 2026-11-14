@@ -1,6 +1,6 @@
 import pytest
 
-from app.convert import ConversionError, from_ngsi, to_ngsi
+from app.convert import ConversionError, from_ngsi, normalize, to_ngsi
 from tests.examples import load_examples, without_context
 
 EXAMPLES = load_examples()
@@ -60,3 +60,13 @@ def test_location_must_be_coordinates():
 def test_patch_cannot_change_id():
     with pytest.raises(ConversionError, match="id: não pode ser alterado"):
         to_ngsi("Hotel", {"id": "outro", "name": "X"}, with_id=False)
+
+
+def test_normalize_restores_single_item_lists():
+    e = normalize({"id": "urn:ngsi-ld:PointOfInterest:p", "type": "PointOfInterest",
+                   "category": {"type": "Property", "value": "restaurant"},
+                   "openingHoursSpecification": {"type": "Property", "value": {"opens": "11:00", "closes": "23:00"}},
+                   "name": {"type": "Property", "value": "X"}})
+    assert e["category"]["value"] == ["restaurant"]
+    assert e["openingHoursSpecification"]["value"] == [{"opens": "11:00", "closes": "23:00"}]
+    assert e["name"]["value"] == "X"

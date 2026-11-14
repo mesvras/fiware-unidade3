@@ -31,6 +31,21 @@ def value(entity: dict, attr: str):
     return v["@value"] if isinstance(v, dict) and "@value" in v else v
 
 
+def is_list_attr(attr: dict) -> bool:
+    return attr["vtype"] in ("array", "arrayenum") or bool(attr.get("array"))
+
+
+def normalize(entity: dict) -> dict:
+    model = ENTITIES.get(entity.get("type"))
+    if not model:
+        return entity
+    for attr in model["attrs"]:
+        prop = entity.get(attr["name"])
+        if is_list_attr(attr) and isinstance(prop, dict) and "value" in prop and not isinstance(prop["value"], list):
+            prop["value"] = [prop["value"]]
+    return entity
+
+
 def now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 

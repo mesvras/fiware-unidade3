@@ -91,18 +91,29 @@ done
 
 python3 -I -c "import json, sys; [print(e['id']) for e in json.load(open(sys.argv[1]))]" "$WORK/batch.json" > "$WORK/ids"
 diffs=0
+checked=0
 while read -r id; do
-  orion http://localhost:1026/ngsi-ld/v1/entities/"$id" -H "$LINK" > "$WORK/got.json"
+  orion http://localhost:1026/ngsi-ld/v1/entities/"$id" -H "$LINK" < /dev/null > "$WORK/got.json"
   out=$(python3 -I -c '
 import json, sys
+from datetime import datetime
+def instant(t): return datetime.fromisoformat(t.replace("Z", "+00:00"))
+def same(w, g):
+    if not (isinstance(w, dict) and isinstance(g, dict)): return w == g
+    g = dict(g)
+    if isinstance(w.get("value"), list) and len(w["value"]) == 1 and g.get("value") == w["value"][0]: g["value"] = w["value"]
+    if "observedAt" in w and "observedAt" in g and instant(w["observedAt"]) == instant(g["observedAt"]): g["observedAt"] = w["observedAt"]
+    return w == g
 want = next(e for e in json.load(open(sys.argv[1])) if e["id"] == sys.argv[3])
 got = json.load(open(sys.argv[2]))
 for x in (want, got): x.pop("@context", None)
 keys = sorted(set(want) | set(got))
-print("; ".join(k for k in keys if want.get(k) != got.get(k)))' "$WORK/batch.json" "$WORK/got.json" "$id")
+print("; ".join(k for k in keys if not same(want.get(k), got.get(k))))' "$WORK/batch.json" "$WORK/got.json" "$id")
+  checked=$((checked + 1))
   if [ -n "$out" ]; then fail "leitura de $id" "atributos diferentes: $out"; diffs=$((diffs + 1)); fi
 done < "$WORK/ids"
-[ "$diffs" -eq 0 ] && ok "leitura de volta idêntica nos $total exemplos"
+expect "exemplos comparados na leitura de volta" "$checked" "$total"
+[ "$diffs" -eq 0 ] && ok "leitura de volta equivalente nos $total exemplos"
 
 q() { orion -G http://localhost:1026/ngsi-ld/v1/entities -H "$LINK" "$@" | json '" ".join(sorted(e["id"].rsplit(":", 1)[-1] for e in d))'; }
 expect "consulta category==restaurant" "$(q --data-urlencode type=PointOfInterest --data-urlencode 'q=category=="restaurant"')" "restaurante-modelo-mare"

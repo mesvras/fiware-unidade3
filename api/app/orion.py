@@ -1,6 +1,7 @@
 import httpx
 
 from .config import Settings
+from .convert import normalize
 
 ENTITIES = "/ngsi-ld/v1/entities"
 
@@ -54,7 +55,7 @@ class Orion:
             return None
         if r.status_code != 200:
             self._fail(r)
-        return r.json()
+        return normalize(r.json())
 
     async def get_many(self, ids: list[str]) -> dict[str, dict]:
         found = {}
@@ -81,7 +82,7 @@ class Orion:
         r = await self._send("GET", ENTITIES, params=params)
         if r.status_code != 200:
             self._fail(r)
-        return r.json()
+        return [normalize(e) for e in r.json()]
 
     async def close(self) -> None:
         await self.client.aclose()
