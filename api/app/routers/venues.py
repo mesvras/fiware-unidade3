@@ -82,7 +82,9 @@ def make_router(prefix: str, category: str, tag: str, label: str) -> APIRouter:
 
     @router.delete("/{item_id}", status_code=204)
     async def delete_item(item_id: str, orion: Orion = Depends(get_orion), principal: Principal = Depends(current_principal)):
-        await service.remove(orion, principal, await read(orion, item_id))
+        current = await read(orion, item_id)
+        await service.ensure_unreferenced(orion, current, (("Event", "refPointOfInterest"),), label)
+        await service.remove(orion, principal, current)
 
     return router
 

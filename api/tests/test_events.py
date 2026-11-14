@@ -107,3 +107,10 @@ def test_update_event(api, events):
     assert body["refPointOfInterest"] == f"urn:ngsi-ld:PointOfInterest:{REST['id']}"
     assert api.patch(f"/v1/events/{IDS[1]}", json={"category": ["bathingRestriction"]}).status_code == 400
     assert api.patch(f"/v1/events/{IDS[1]}", json={"endDate": "2026-12-01T00:00:00Z"}).status_code == 400
+
+
+def test_place_with_events_cannot_be_removed(api, events):
+    assert api.patch(f"/v1/events/{IDS[1]}", json={"refPointOfInterest": {"bar": BAR["id"]}}).status_code == 200
+    r = api.delete(f"/v1/bars/{BAR['id']}")
+    assert r.status_code == 409
+    assert "Event.refPointOfInterest" in errors(r)
