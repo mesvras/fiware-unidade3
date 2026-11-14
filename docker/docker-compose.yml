@@ -77,6 +77,42 @@ services:
       retries: 6
       start_period: 15s
 
+  crate:
+    image: crate:${CRATE_VERSION:?defina CRATE_VERSION no .env}
+    restart: unless-stopped
+    networks: [internal]
+    command: ["crate", "-Cdiscovery.type=single-node", "-Ccluster.name=natal"]
+    environment:
+      CRATE_HEAP_SIZE: ${CRATE_HEAP_SIZE:-1g}
+    volumes:
+      - crate-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:4200/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  quantumleap:
+    image: orchestracities/quantumleap:${QUANTUMLEAP_VERSION:?defina QUANTUMLEAP_VERSION no .env}
+    restart: unless-stopped
+    networks: [internal]
+    depends_on:
+      crate:
+        condition: service_healthy
+    environment:
+      CRATE_HOST: crate
+      QL_DEFAULT_DB: crate
+      USE_GEOCODING: "False"
+      CACHE_QUERIES: "False"
+      LOGLEVEL: ${QL_LOG_LEVEL:-WARNING}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8668/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
 networks:
   internal:
     internal: true
@@ -85,3 +121,4 @@ volumes:
   mongo-data:
   mongo-config:
   mosquitto-data:
+  crate-data:
