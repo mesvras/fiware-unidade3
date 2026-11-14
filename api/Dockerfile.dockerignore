@@ -1,0 +1,7 @@
+*
+!api/requirements.txt
+!api/requirements-dev.txt
+!api/app/
+!api/tests/
+!pkg/
+**/__pycache__

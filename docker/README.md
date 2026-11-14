@@ -1,6 +1,6 @@
 # Stack Docker
 
-Orion-LD, MongoDB, Mosquitto, IoT Agent JSON, CrateDB, QuantumLeap e um servidor de contextos (nginx) em uma rede interna (`internal: true`). Nenhum serviço publica porta no host e nenhum container acessa a internet.
+Orion-LD, MongoDB, Mosquitto, IoT Agent JSON, CrateDB, QuantumLeap, um servidor de contextos (nginx) e a API da plataforma em uma rede interna (`internal: true`). Nenhum serviço publica porta no host e nenhum container acessa a internet.
 
 ## Como subir
 
@@ -14,6 +14,16 @@ Para consultar o Orion-LD, use um container na mesma rede:
 
 ```bash
 docker compose exec orion curl -s http://localhost:1026/ngsi-ld/ex/v1/version
+```
+
+## API da plataforma
+
+O serviço `api` é construído a partir de `api/Dockerfile`, com o repositório como contexto de build, porque a imagem inclui `pkg/` (schemas e `spec.py`). A API roda sem root, na porta 8000, só na rede interna. A variável `API_TENANT` define o tenant NGSI-LD; vazia, usa o tenant padrão.
+
+Os testes rodam em um container na mesma rede, no perfil `test`:
+
+```bash
+docker compose --profile test run --rm --build api-tests
 ```
 
 ## Teste de fumaça
