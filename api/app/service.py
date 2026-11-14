@@ -20,9 +20,14 @@ async def json_body(request: Request) -> dict:
     return body
 
 
-async def create(orion: Orion, type_: str, body: dict, owner: str, fixed: dict | None = None) -> dict:
+Derive = Callable[[dict], dict]
+
+
+async def create(orion: Orion, type_: str, body: dict, owner: str, fixed: dict | None = None, derive: Derive | None = None) -> dict:
     data = {k: v for k, v in body.items() if k != OWNER}
     entity = to_ngsi(type_, {**data, **(fixed or {}), OWNER: owner})
+    if derive:
+        entity.update(derive(entity))
     await validate(orion, entity)
     await orion.create(entity)
     return entity
@@ -35,11 +40,13 @@ async def read(orion: Orion, type_: str, slug: str, what: str, match: Callable[[
     return entity
 
 
-async def update(orion: Orion, current: dict, body: dict, frozen: tuple[str, ...] = ()) -> dict:
+async def update(orion: Orion, current: dict, body: dict, frozen: tuple[str, ...] = (), derive: Derive | None = None) -> dict:
     blocked = sorted(k for k in body if k in frozen)
     if blocked:
         raise ApiError(400, *(f"{k}: não pode ser alterado" for k in blocked))
     changes = to_ngsi(current["type"], {k: v for k, v in body.items() if k != OWNER}, with_id=False)
+    if derive:
+        changes.update({k: v for k, v in derive({**current, **changes}).items() if current.get(k) != v})
     merged = {**current, **changes}
     await validate(orion, merged)
     if changes:

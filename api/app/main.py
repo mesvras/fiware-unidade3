@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from . import errors
 from .config import settings
 from .orion import Orion, OrionUnavailable
-from .routers import availability, hotels
+from .routers import availability, hotels, venues
 
 
 @asynccontextmanager
@@ -20,6 +20,8 @@ app = FastAPI(title="API da plataforma de turismo e cultura de Natal", version="
 errors.register(app)
 app.include_router(hotels.router)
 app.include_router(availability.router)
+app.include_router(venues.restaurants)
+app.include_router(venues.bars)
 
 
 @app.get("/health")

@@ -9,6 +9,7 @@ class Settings:
     tenant: str = os.environ.get("NGSILD_TENANT", "")
     timeout: float = float(os.environ.get("ORION_TIMEOUT", "10"))
     dev_owner: str = os.environ.get("DEV_OWNER", "dev-owner")
+    limited_ratio: float = float(os.environ.get("AVAILABILITY_LIMITED_RATIO", "0.7"))
     auth_enabled: bool = os.environ.get("AUTH_ENABLED", "false").lower() == "true"
 
 
