@@ -30,6 +30,53 @@ services:
       retries: 6
       start_period: 15s
 
+  mosquitto:
+    image: eclipse-mosquitto:${MOSQUITTO_VERSION:?defina MOSQUITTO_VERSION no .env}
+    restart: unless-stopped
+    networks: [internal]
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto-data:/mosquitto/data
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/broker/version", "-C", "1", "-W", "3"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+
+  iot-agent:
+    image: telefonicaiot/iotagent-json:${IOTA_JSON_VERSION:?defina IOTA_JSON_VERSION no .env}
+    restart: unless-stopped
+    networks: [internal]
+    depends_on:
+      mongo:
+        condition: service_healthy
+      orion:
+        condition: service_healthy
+      mosquitto:
+        condition: service_healthy
+    environment:
+      IOTA_CB_HOST: orion
+      IOTA_CB_PORT: "1026"
+      IOTA_CB_NGSI_VERSION: ld
+      IOTA_NORTH_PORT: "4041"
+      IOTA_PROVIDER_URL: http://iot-agent:4041
+      IOTA_REGISTRY_TYPE: mongodb
+      IOTA_MONGO_URI: mongodb://mongo:27017/iotagentjson
+      IOTA_MQTT_HOST: mosquitto
+      IOTA_MQTT_PORT: "1883"
+      IOTA_JSON_LD_CONTEXT: ${IOTA_JSON_LD_CONTEXT:-https://uri.etsi.org/ngsi-ld/v1/ngsi-ld-core-context-v1.8.jsonld}
+      IOTA_AMQP_DISABLED: "true"
+      IOTA_TIMESTAMP: "true"
+      IOTA_AUTOCAST: "true"
+      IOTA_LOG_LEVEL: ${IOTA_LOG_LEVEL:-WARN}
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:4041/iot/about',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
 networks:
   internal:
     internal: true
@@ -37,3 +84,4 @@ networks:
 volumes:
   mongo-data:
   mongo-config:
+  mosquitto-data:
