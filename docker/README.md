@@ -70,6 +70,12 @@ Os testes rodam em um container na mesma rede, no perfil `test`. O perfil també
 docker compose --profile test run --rm --build api-tests
 ```
 
+Os testes unitários dos simuladores não precisam da stack:
+
+```bash
+docker compose --profile test run --rm --build sim-tests
+```
+
 ## Teste de fumaça
 
 ```bash
@@ -83,6 +89,18 @@ O script usa o tenant `smoketest` e remove tudo o que cria. Ele verifica:
 - uma medição MQTT passa pela IoT Agent e chega ao Orion-LD;
 - uma assinatura leva o histórico do Orion-LD ao QuantumLeap e ao CrateDB;
 - os 17 exemplos de `pkg/` entram por upsert em lote, voltam equivalentes na leitura e respondem às consultas por categoria, relacionamento, distância e janela de datas.
+
+## Simuladores
+
+O serviço `simulator` fica no perfil `sim` e só sobe com `run`. Ele roda na rede interna, sem porta publicada, e só acessa a API (`http://api:8000`). As variáveis `SIM_*` vêm do `.env` ou do ambiente do shell.
+
+```bash
+docker compose --profile sim run --rm --build simulator seed all   # cria ou atualiza os dados
+docker compose --profile sim run --rm simulator check all          # verifica os dados pela API
+docker compose --profile sim run --rm simulator run                # altera os dados de forma contínua
+```
+
+Comandos, volumes e variáveis estão em [`simulators/README.md`](../simulators/README.md).
 
 ## Servidor de contextos
 

@@ -17,7 +17,7 @@ Balneabilidade  laudo oficial e estimativa por sondas                     laudo 
 
 Decisões de escopo:
 
-- Dados simulados, mas no formato real de cada fonte.
+- Dados simulados e realistas, enviados pela API no mesmo formato que um prestador usaria.
 - A plataforma só responde consultas de disponibilidade; não há reserva. Guardar disponibilidade agregada.
 - A balneabilidade aceita dois formatos de fonte (laudo e estimativa) e consolida em um estado por praia. Laudo válido prevalece; a estimativa não é laudo oficial.
 - O turista precisa logar: cadastro próprio ou conta Google.
@@ -158,7 +158,7 @@ Decisões de modelagem:
 
 ## 5. Backlog alternativo
 
-Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em três sprints (27 h, 29 h e 27 h) e 2 itens opcionais (portal de cadastro 8 h, mapa do turista 6 h). As abas originais não foram alteradas. A TASK-03 (modelos de dados) está concluída.
+Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em três sprints (27 h, 29 h e 27 h) e 2 itens opcionais (portal de cadastro 8 h, mapa do turista 6 h). As abas originais não foram alteradas. As TASK-03 a TASK-09 estão concluídas: modelos de dados, stack Docker, API e simuladores de hotéis, restaurantes e bares, eventos e praias.
 
 ## 6. Pontos em aberto
 
@@ -167,7 +167,10 @@ Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em t
 - Na TASK-13, criar as tabelas do CrateDB com colunas `DOUBLE` antes da primeira notificação; o QuantumLeap fixa o tipo da coluna pelo primeiro valor e trunca decimais.
 - Na TASK-15, revisar a matriz provisória de papéis da API.
 - Na TASK-16, configurar o Keycloak para emitir `aud` igual a `natal-api`, a claim `owner_id` com o identificador da organização e os papéis do realm.
-- `cuisine` é texto livre e o filtro compara o valor exato; avaliar lista fechada ou padronização do texto.
+- `cuisine` é texto livre e o filtro compara o valor exato; avaliar lista fechada ou padronização do texto. Os simuladores usam uma lista fixa em minúsculas.
+- Se a TASK-10 mudar o limiar de `availabilityLevel`, ajustar o `check restaurants` dos simuladores, que usa 70%.
+- Com 2 ou mais requisições simultâneas, o Orion-LD 1.12 às vezes falha na tradução dos termos pelo `@context` (atributo devolvido com o nome expandido, 404 ou 207 indevidos). A causa não foi identificada, e a versão em desenvolvimento tem o mesmo comportamento. Avaliar um relato ao projeto Orion-LD com um caso que reproduz o erro.
+- Depois da TASK-16, os simuladores devem obter token com `client_credentials`; hoje a API do Compose roda sem autenticação.
 
 ## 7. Decisões registradas
 
@@ -182,3 +185,6 @@ Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em t
 - Consultas por data usam a forma `atributo[@value]` com texto entre aspas, porque o Orion-LD 1.12 compara datas como texto; a agenda filtra eventos por sobreposição à janela.
 - Autenticação por JWT conforme OWASP: algoritmos assimétricos, claims obrigatórias, JWKS com rotação, negação por padrão, autorização por papel e por dono do registro (`dataOwner` vindo de `owner_id` ou `sub`).
 - Matriz provisória de papéis: hotelaria escreve em hotéis; bares-restaurantes em restaurantes e bares; produtor-cultural em eventos; gestor-governo em praias, pontos de coleta e estações; qualquer usuário autenticado lê.
+- O Orion-LD roda com o pool de threads HTTP desligado (`ORIONLD_TRQ_POOL_SIZE=0`, uma thread por conexão), porque o pool padrão da 1.12 corrompe requisições simultâneas e derruba o Orion-LD. A API usa uma só conexão com o Orion-LD (`ORION_MAX_CONNECTIONS=1`), por causa da falha residual descrita nos pontos em aberto.
+- Simuladores (TASK-06 a TASK-09) em Python, em `simulators/`, como clientes da API: usam o formato simplificado e não acessam o Orion-LD. Geografia e nomes são fictícios, em cinco zonas de Natal compartilhadas por hotéis, restaurantes e bares. Os registros têm ids com prefixo `sim-` e ficam no tenant padrão. Os dados são reprodutíveis pela semente e pela data inicial, e o `seed` é idempotente.
+- A categoria `conference` foi adicionada a `Event.category` como extensão do projeto, para congressos.

@@ -22,7 +22,7 @@ Eventos        de show em bar a congresso, com local, data e porte       API da 
 Balneabilidade laudo oficial (com validade) e estimativa por sondas      laudo pela API; sondas por MQTT
 ```
 
-Os dados são simulados, mas seguem o formato real de cada fonte.
+Os dados são simulados. Os simuladores geram dados realistas e os enviam pela API, no mesmo formato que um prestador usaria.
 
 
 ## Arquitetura
@@ -77,7 +77,7 @@ SDM             Beach, PointOfInterest, WaterQualityObserved, WeatherObserved, E
 Customizados    Hotel, RoomType, RoomAvailability, BathingReport, BathingStatus
 ```
 
-Detalhes, atributos e relacionamentos em [`docs/modelos.md`](docs/modelos.md). O contexto, o vocabulário com o alinhamento ao schema.org (`Hotel`, `checkInTime`, `checkOutTime`), os schemas e os exemplos ficam em [`pkg/`](pkg/).
+Detalhes, atributos e relacionamentos em [`pkg/docs/modelos.md`](pkg/docs/modelos.md). O contexto, o vocabulário com o alinhamento ao schema.org (`Hotel`, `checkInTime`, `checkOutTime`), os schemas e os exemplos ficam em [`pkg/`](pkg/).
 
 ## Balneabilidade
 
@@ -89,7 +89,7 @@ Laudo oficial e estimativa por sondas são consolidados em um único `BathingSta
 pkg/           @context, vocabulário schema.org, JSON Schemas, exemplos NGSI-LD e validador
 docker/        Docker Compose da stack (Orion-LD, MongoDB, Mosquitto, IoT Agent, QuantumLeap, CrateDB, servidor de contextos) e smoke test
 api/           API da plataforma
-simulators/    simuladores de hotéis, restaurantes, eventos, laudos, sondas e estação
+simulators/    simuladores de hotéis, restaurantes e bares, eventos e praias (laudos e sondas na TASK-11)
 llm/           serviço de roteiros
 docs/          arquitetura, modelos e decisões
 ```
@@ -138,6 +138,17 @@ Para validar os modelos de dados:
 pip install pyld jsonschema
 python3 -I pkg/tools/validate.py
 ```
+
+### Simuladores
+
+Com a stack no ar, os simuladores carregam dados de hotéis, restaurantes e bares, eventos e praias pela API e verificam o resultado. Os comandos rodam a partir da pasta `docker/`:
+
+```bash
+docker compose --profile sim run --rm --build simulator seed all
+docker compose --profile sim run --rm simulator check all
+```
+
+Comandos, volumes e variáveis estão em [`simulators/README.md`](simulators/README.md).
 
 ## Segurança e privacidade
 
