@@ -4,11 +4,12 @@ import logging
 import signal
 import sys
 
+from . import hotels
 from .client import ApiClient
 from .config import Config
 
-TARGETS = {}
-RUNNERS = ()
+TARGETS = {"hotels": hotels}
+RUNNERS = (hotels.Runner,)
 
 log = logging.getLogger("sim")
 
