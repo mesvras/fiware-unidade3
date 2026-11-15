@@ -22,7 +22,8 @@ class Orion:
         headers = {"Link": f'<{settings.context_url}>; rel="http://www.w3.org/ns/json-ld#context"; type="application/ld+json"'}
         if settings.tenant:
             headers["NGSILD-Tenant"] = settings.tenant
-        self.client = httpx.AsyncClient(base_url=settings.orion_url, timeout=settings.timeout, headers=headers)
+        self.client = httpx.AsyncClient(base_url=settings.orion_url, timeout=settings.timeout, headers=headers,
+                                        limits=httpx.Limits(max_connections=settings.orion_connections))
 
     async def _send(self, method: str, url: str, **kwargs) -> httpx.Response:
         try:

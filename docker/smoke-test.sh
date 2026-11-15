@@ -33,7 +33,7 @@ cleanup() {
   sql "drop table if exists mt$TENANT.etsmokeseries" >/dev/null 2>&1
   sql "delete from doc.md_ets_metadata where table_name like '%mt$TENANT%'" >/dev/null 2>&1
   local types ids
-  types="SmokeDevice SmokeSeries $(docker compose exec -T orion curl -sS -m 20 http://context/examples-batch.jsonld | json '" ".join(sorted({e["type"] for e in d}))' 2>/dev/null)"
+  types="SmokeDevice SmokeSeries SmokeConcurrency $(docker compose exec -T orion curl -sS -m 20 http://context/examples-batch.jsonld | json '" ".join(sorted({e["type"] for e in d}))' 2>/dev/null)"
   for type in $types; do
     ids=$(orion -G http://localhost:1026/ngsi-ld/v1/entities -H "$LINK" --data-urlencode "type=$type" --data-urlencode limit=1000 | json 'json.dumps([e["id"] for e in d])' 2>/dev/null)
     [ -n "$ids" ] && [ "$ids" != "[]" ] && orion -X POST http://localhost:1026/ngsi-ld/v1/entityOperations/delete -H 'Content-Type: application/json' -d "$ids" -o /dev/null
@@ -53,6 +53,31 @@ for svc in $(docker compose config --services); do
 done
 published=$(docker compose config --format json | json 'sum(1 for s in d["services"].values() if s.get("ports"))')
 expect "nenhuma porta publicada" "$published" "0"
+
+echo "== Orion-LD com requisições concorrentes"
+restarts() { docker inspect "$(docker compose ps -q orion)" --format '{{.RestartCount}}'; }
+before=$(restarts)
+codes=$(docker compose exec -T api python -c '
+import asyncio, collections, sys, httpx
+tenant, entities, total, conns = sys.argv[1], 8, 1000, 8
+async def main():
+    async with httpx.AsyncClient(base_url="http://orion:1026/ngsi-ld/v1/entities", headers={"NGSILD-Tenant": tenant}, timeout=20) as c:
+        for i in range(entities):
+            await c.post("", json={"id": f"urn:ngsi-ld:SmokeConcurrency:{i}", "type": "SmokeConcurrency", "n": {"type": "Property", "value": 0}})
+        limit, codes = asyncio.Semaphore(conns), collections.Counter()
+        async def patch(i):
+            async with limit:
+                try:
+                    r = await c.patch(f"/urn:ngsi-ld:SmokeConcurrency:{i % entities}/attrs", json={"n": {"type": "Property", "value": i}})
+                    codes[r.status_code] += 1
+                except httpx.HTTPError as e:
+                    codes[type(e).__name__] += 1
+        await asyncio.gather(*(patch(i) for i in range(total)))
+    print(" ".join(f"{k}={v}" for k, v in sorted(codes.items(), key=str)))
+asyncio.run(main())' "$TENANT" < /dev/null)
+errors=$(echo "$codes" | tr ' ' '\n' | grep -v '^[0-9]' | tr '\n' ' ')
+expect "1000 PATCH com 8 conexões sem erros de conexão ($codes)" "${errors:-nenhum}" "nenhum"
+expect "Orion-LD sem reinícios" "$(restarts)" "$before"
 
 echo "== MQTT, IoT Agent e Orion-LD"
 expect "grupo provisionado" "$(iota POST http://localhost:4041/iot/services '{"services":[{"apikey":"smokekey","cbroker":"http://orion:1026","entity_type":"SmokeDevice","resource":"/iot/json"}]}')" "201"

@@ -22,7 +22,9 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
-    command: ["-dbhost", "mongo", "-mongocOnly", "-logLevel", "${ORION_LD_LOG_LEVEL:-WARN}"]
+    env_file: ./orion/orion.env
+    environment:
+      ORIONLD_LOG_LEVEL: ${ORION_LD_LOG_LEVEL:-WARN}
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:1026/ngsi-ld/ex/v1/version"]
       interval: 10s

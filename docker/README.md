@@ -18,7 +18,7 @@ docker compose exec orion curl -s http://localhost:1026/ngsi-ld/ex/v1/version
 
 ## API da plataforma
 
-O serviço `api` é construído a partir de `api/Dockerfile`, com o repositório como contexto de build, porque a imagem inclui `pkg/` (schemas e `spec.py`). A API roda sem root, na porta 8000, só na rede interna. A variável `API_TENANT` define o tenant NGSI-LD; vazia, usa o tenant padrão.
+O serviço `api` é construído a partir de `api/Dockerfile`, com o repositório como contexto de build, porque a imagem inclui `pkg/` (schemas e `spec.py`). A API roda sem root, na porta 8000, só na rede interna. A variável `API_TENANT` define o tenant NGSI-LD; vazia, usa o tenant padrão. A API usa uma só conexão com o Orion-LD (`ORION_MAX_CONNECTIONS`, padrão 1) e põe as requisições em fila; veja "Requisições simultâneas ao Orion-LD" abaixo.
 
 ### Autenticação e autorização
 
@@ -79,6 +79,7 @@ docker compose --profile test run --rm --build api-tests
 O script usa o tenant `smoketest` e remove tudo o que cria. Ele verifica:
 
 - todos os serviços `healthy` e nenhuma porta publicada;
+- 1000 PATCH no Orion-LD com 8 conexões simultâneas terminam sem erros de conexão e sem reinício do Orion-LD;
 - uma medição MQTT passa pela IoT Agent e chega ao Orion-LD;
 - uma assinatura leva o histórico do Orion-LD ao QuantumLeap e ao CrateDB;
 - os 17 exemplos de `pkg/` entram por upsert em lote, voltam equivalentes na leitura e respondem às consultas por categoria, relacionamento, distância e janela de datas.
@@ -115,7 +116,10 @@ O CrateDB exige `vm.max_map_count` de pelo menos 262144 no host (`sysctl vm.max_
 ## Decisões e ressalvas
 
 - **Orion-LD com `-mongocOnly`.** O driver padrão do Orion-LD usa o comando `OP_QUERY`, que o MongoDB removeu na versão 6.0. Com o driver padrão, o Orion-LD termina ao iniciar (`Unsupported OP_QUERY command: listDatabases`). A opção `-mongocOnly` desliga esse driver, usa só o driver C oficial (`mongoc`) e ativa a implementação nova das operações NGSI-LD, que o Orion-LD chama de experimental. A alternativa era o MongoDB 4.4 ou 5.0, que não têm suporte desde 2024.
-- **`-dbhost` no lugar de `-dbURI`.** Na versão 1.12.0, o valor de `-dbURI` chega com um espaço no início e o Orion-LD o rejeita (`Invalid URI scheme " mongodb://"`).
+- **Configuração do Orion-LD em `orion/orion.env`.** Cada opção de linha de comando do Orion-LD tem uma variável `ORIONLD_*` equivalente (veja `orionld -U`). O nível de log fica no `docker-compose.yml`, porque vem de `ORION_LD_LOG_LEVEL` no `.env`.
+- **`ORIONLD_MONGO_HOST` no lugar de `ORIONLD_MONGO_URI`.** Na versão 1.12.0, o valor de `-dbURI` chega com um espaço no início e o Orion-LD o rejeita (`Invalid URI scheme " mongodb://"`).
+- **Pool de threads HTTP desligado (`ORIONLD_TRQ_POOL_SIZE=0`).** Na versão 1.12.0, o padrão (`-1`) liga um pool de threads em que cada thread atende várias conexões. O Orion-LD guarda o estado da requisição em memória local da thread, e requisições intercaladas na mesma thread corrompem umas às outras. Com 2 ou mais PATCH simultâneos aparecem respostas 400, 404 e 207 indevidas. Com 3 ou mais, o Orion-LD aborta (`delayedFreeVec needs to be augmented`) e reinicia. Com o valor `0`, cada conexão tem a sua thread, e as requisições continuam a ser atendidas em paralelo. As versões em desenvolvimento do Orion-LD removeram o pool pelo mesmo motivo ([issue #1943](https://github.com/FIWARE/context.Orion-LD/issues/1943)). O teste de fumaça verifica esta configuração.
+- **Requisições simultâneas ao Orion-LD.** Mesmo sem o pool, com 2 ou mais conexões simultâneas, algumas requisições falham na tradução dos termos pelo `@context`. Um GET devolve um atributo com o nome expandido (`https://example.org/natal/ns#availableUnits` no lugar de `availableUnits`), e um PATCH responde 404 ou 207 para uma entidade que existe. Em testes com GET seguido de PATCH em entidades diferentes, a taxa foi de cerca de 1 em 12000 pares com 2 conexões e de 1 em 2000 com 4 a 8 conexões. Com 1 conexão, o erro não apareceu em 12000 pares. A causa não foi identificada, e a versão em desenvolvimento do Orion-LD tem o mesmo comportamento. Por isso, a API usa uma só conexão com o Orion-LD (`ORION_MAX_CONNECTIONS=1`). A IoT Agent e o QuantumLeap acessam o Orion-LD por conexões próprias.
 - **MongoDB sem autenticação.** O banco só é acessível pela rede interna. Ative a autenticação antes de expor o ambiente.
 - **Core context.** Ao iniciar, o Orion-LD tenta baixar o core context NGSI-LD da internet. Sem acesso, ele usa a cópia embutida e registra erros no log. O comportamento é esperado.
 - **Mosquitto sem autenticação.** O broker aceita conexões anônimas e só é acessível pela rede interna. A autenticação entra na TASK-11, junto dos simuladores.

@@ -14,6 +14,7 @@ class Settings:
     context_url: str = os.environ.get("CONTEXT_URL", "http://context/natal-context.jsonld")
     tenant: str = os.environ.get("NGSILD_TENANT", "")
     timeout: float = float(os.environ.get("ORION_TIMEOUT", "10"))
+    orion_connections: int = int(os.environ.get("ORION_MAX_CONNECTIONS", "1"))
     dev_owner: str = os.environ.get("DEV_OWNER", "dev-owner")
     limited_ratio: float = float(os.environ.get("AVAILABILITY_LIMITED_RATIO", "0.7"))
     auth_enabled: bool = os.environ.get("AUTH_ENABLED", "true").lower() != "false"
@@ -28,6 +29,8 @@ class Settings:
     max_token_bytes: int = int(os.environ.get("MAX_TOKEN_BYTES", "8192"))
 
     def problems(self) -> list[str]:
+        if self.orion_connections < 1:
+            return ["ORION_MAX_CONNECTIONS deve ser 1 ou maior"]
         if not self.auth_enabled:
             return []
         found = [f"{name} não definido" for name, v in (("OIDC_ISSUER", self.oidc_issuer), ("OIDC_AUDIENCE", self.oidc_audience),
