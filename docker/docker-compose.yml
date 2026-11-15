@@ -175,6 +175,8 @@ services:
       SIM_NIGHTS: ${SIM_NIGHTS:-60}
       SIM_RESTAURANTS: ${SIM_RESTAURANTS:-25}
       SIM_BARS: ${SIM_BARS:-15}
+      SIM_EVENTS: ${SIM_EVENTS:-40}
+      SIM_EVENT_DAYS: ${SIM_EVENT_DAYS:-60}
 
   sim-tests:
     profiles: [test]
