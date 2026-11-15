@@ -177,6 +177,9 @@ services:
       SIM_BARS: ${SIM_BARS:-15}
       SIM_EVENTS: ${SIM_EVENTS:-40}
       SIM_EVENT_DAYS: ${SIM_EVENT_DAYS:-60}
+      SIM_STATIONS: ${SIM_STATIONS:-2}
+      SIM_BEACHES: ${SIM_BEACHES:-6}
+      SIM_POINTS_PER_BEACH: ${SIM_POINTS_PER_BEACH:-2}
 
   sim-tests:
     profiles: [test]

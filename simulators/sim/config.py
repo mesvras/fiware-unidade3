@@ -23,6 +23,9 @@ class Config:
     bars: int = 15
     events: int = 40
     event_days: int = 60
+    stations: int = 2
+    beaches: int = 6
+    points_per_beach: int = 2
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -39,4 +42,7 @@ class Config:
             bars=_int("SIM_BARS", 15),
             events=_int("SIM_EVENTS", 40),
             event_days=_int("SIM_EVENT_DAYS", 60, 7),
+            stations=_int("SIM_STATIONS", 2, 1),
+            beaches=_int("SIM_BEACHES", 6),
+            points_per_beach=_int("SIM_POINTS_PER_BEACH", 2),
         )

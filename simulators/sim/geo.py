@@ -31,8 +31,12 @@ ZONES = (
 
 
 def point(rng: random.Random, zone: Zone) -> list[float]:
-    lon, lat = zone.center
-    distance = zone.radius * math.sqrt(rng.random())
+    return around(rng, zone.center, zone.radius)
+
+
+def around(rng: random.Random, center: tuple[float, float] | list[float], radius: float) -> list[float]:
+    lon, lat = center
+    distance = radius * math.sqrt(rng.random())
     angle = rng.uniform(0, 2 * math.pi)
     dlat = distance * math.sin(angle) / METERS_PER_DEGREE
     dlon = distance * math.cos(angle) / (METERS_PER_DEGREE * math.cos(math.radians(lat)))
@@ -49,7 +53,7 @@ def address(rng: random.Random, zone: Zone) -> dict:
     }
 
 
-def distance_m(a: list[float], b: tuple[float, float]) -> float:
+def distance_m(a: list[float], b: tuple[float, float] | list[float]) -> float:
     dlat = (a[1] - b[1]) * METERS_PER_DEGREE
     dlon = (a[0] - b[0]) * METERS_PER_DEGREE * math.cos(math.radians(b[1]))
     return math.hypot(dlat, dlon)
