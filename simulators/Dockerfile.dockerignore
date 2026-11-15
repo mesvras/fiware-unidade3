@@ -1,0 +1,6 @@
+*
+!simulators/requirements.txt
+!simulators/requirements-dev.txt
+!simulators/sim/
+!simulators/tests/
+**/__pycache__

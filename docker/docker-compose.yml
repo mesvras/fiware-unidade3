@@ -154,6 +154,35 @@ services:
       retries: 6
       start_period: 10s
 
+  simulator:
+    profiles: [sim]
+    build:
+      context: ..
+      dockerfile: simulators/Dockerfile
+      target: runtime
+    image: natal-simulator:dev
+    networks: [internal]
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      API_URL: http://api:8000
+      SIM_SEED: ${SIM_SEED:-natal}
+      SIM_START_DATE: ${SIM_START_DATE:-}
+      SIM_CONCURRENCY: ${SIM_CONCURRENCY:-8}
+      SIM_INTERVAL: ${SIM_INTERVAL:-30}
+      SIM_HOTELS: ${SIM_HOTELS:-12}
+      SIM_NIGHTS: ${SIM_NIGHTS:-60}
+
+  sim-tests:
+    profiles: [test]
+    build:
+      context: ..
+      dockerfile: simulators/Dockerfile
+      target: test
+    image: natal-simulator-tests:dev
+    network_mode: none
+
   test-idp:
     profiles: [test]
     build:
