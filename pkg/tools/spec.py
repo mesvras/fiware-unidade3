@@ -49,7 +49,7 @@ E("Event","SDM dataModel.TourismDestinations/Event (perfil + extensões)","Event
   A("startDate","P","datetime","R","SDM","Início (DateTime, UTC)."),
   A("endDate","P","datetime","R","SDM","Fim (DateTime, UTC), posterior a startDate."),
   LOC(), ADDR(), OWNER,
-  A("category","P","arrayenum","R","SDM","Categorias do evento; ao menos uma. bathingRestriction é extensão do projeto.",enum=["excursion","gastronomy","history","museum","outdoorActivities","parksAndGardens","religiousWorship","shopping","spectacle","wellness","bathingRestriction"],minItems=1),
+  A("category","P","arrayenum","R","SDM","Categorias do evento; ao menos uma. conference e bathingRestriction são extensões do projeto.",enum=["excursion","gastronomy","history","museum","outdoorActivities","parksAndGardens","religiousWorship","shopping","spectacle","wellness","conference","bathingRestriction"],minItems=1),
   A("eventScale","P","enum","C:R, exceto se category contém bathingRestriction","EXT","Porte do evento.",enum=["small","medium","large"]),
   A("eventStatus","P","arrayenum","R","SDM","Situação; lista com um valor.",enum=["scheduled","opened","closed","suspended","cancelled","finished","postponed","rescheduled"],minItems=1,maxItems=1),
   A("venueName","P","string","O","EXT","Nome do local (bar, teatro, praça)."),

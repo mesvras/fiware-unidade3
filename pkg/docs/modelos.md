@@ -149,7 +149,7 @@ Descrições dos atributos:
 - `location`: Ponto GeoJSON [longitude, latitude], WGS84.
 - `address`: Endereço postal (addressLocality, streetAddress, postalCode, addressCountry).
 - `dataOwner`: Identificador opaco do dono do registro (claim do token no Keycloak). Preenchido pela API a partir do token; o valor enviado pelo cliente é ignorado.
-- `category`: Categorias do evento; ao menos uma. bathingRestriction é extensão do projeto.
+- `category`: Categorias do evento; ao menos uma. conference e bathingRestriction são extensões do projeto.
 - `eventScale`: Porte do evento.
 - `eventStatus`: Situação; lista com um valor.
 - `venueName`: Nome do local (bar, teatro, praça).

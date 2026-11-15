@@ -118,8 +118,8 @@ PointOfInterest       SDM PointOfInterest/PointOfInterest               category
                                                                         cuisine, dataOwner
 WaterQualityObserved  SDM WaterQuality/WaterQualityObserved             dataOwner; turbidity e salinity obrigatórias
 WeatherObserved       SDM Weather/WeatherObserved                       precipitationIntervalMinutes, dataOwner
-Event                 SDM TourismDestinations/Event                     eventScale, venueName, bathingRestriction,
-                                                                        dataOwner
+Event                 SDM TourismDestinations/Event                     eventScale, venueName, conference,
+                                                                        bathingRestriction, dataOwner
 Hotel                 Customizado                                       —
 RoomType              Customizado                                       —
 RoomAvailability      Customizado                                       —
@@ -175,7 +175,7 @@ Aba "Product Backlog - Alternativa" da planilha de planejamento: 31 tarefas em t
 - A stack da TASK-04 usa Orion-LD 1.12.0 com `-mongocOnly` e MongoDB 7. O driver padrão do Orion-LD não funciona com MongoDB 6 ou superior.
 - Os 17 exemplos foram testados em um Orion-LD real pelo `docker/smoke-test.sh`: upsert, leitura de volta e consultas por categoria, relacionamento, distância e janela de datas.
 - O endereço provisório `https://example.org/natal/` do `@context` fica como está.
-- Os valores extras de `category` ficam como extensão do projeto. Só `Event.category` conflita com o SDM, por ter enum fechado: o valor `bathingRestriction` não existe nele. O `category` do `PointOfInterest` é texto livre no SDM, então `bathingSamplingPoint`, `weatherStation`, `restaurant` e `bar` não conflitam. O conflito é aceito.
+- Os valores extras de `category` ficam como extensão do projeto. Só `Event.category` conflita com o SDM, por ter enum fechado: os valores `conference` (congressos) e `bathingRestriction` não existem nele. O `category` do `PointOfInterest` é texto livre no SDM, então `bathingSamplingPoint`, `weatherStation`, `restaurant` e `bar` não conflitam. O conflito é aceito.
 - A API (TASK-05) usa Python 3.14 com FastAPI, fica em `api/` neste repositório e é a única que escreve no Orion-LD.
 - A API expõe rotas por domínio (`/v1/hotels`, `/v1/restaurants`, `/v1/events`...) sobre um motor comum guiado pelo `spec.py`: conversão do formato simplificado para NGSI-LD, validação com os schemas e as regras de `pkg/tools/checks.py`, e busca no Orion-LD das entidades referenciadas.
 - A API calcula `availabilityLevel` de restaurantes e bares a partir de `occupancy` e `capacity` (limiar de `limited` em 70%, configurável).
