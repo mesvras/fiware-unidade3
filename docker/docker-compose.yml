@@ -173,6 +173,8 @@ services:
       SIM_INTERVAL: ${SIM_INTERVAL:-30}
       SIM_HOTELS: ${SIM_HOTELS:-12}
       SIM_NIGHTS: ${SIM_NIGHTS:-60}
+      SIM_RESTAURANTS: ${SIM_RESTAURANTS:-25}
+      SIM_BARS: ${SIM_BARS:-15}
 
   sim-tests:
     profiles: [test]

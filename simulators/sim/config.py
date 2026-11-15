@@ -19,6 +19,8 @@ class Config:
     interval: int
     hotels: int
     nights: int
+    restaurants: int = 25
+    bars: int = 15
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -31,4 +33,6 @@ class Config:
             interval=_int("SIM_INTERVAL", 30, 1),
             hotels=_int("SIM_HOTELS", 12),
             nights=_int("SIM_NIGHTS", 60, 1),
+            restaurants=_int("SIM_RESTAURANTS", 25),
+            bars=_int("SIM_BARS", 15),
         )
